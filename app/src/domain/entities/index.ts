@@ -1,0 +1,9 @@
+/**
+ * Domain Entities Barrel Export
+ */
+
+export * from './user';
+export * from './soul';
+export * from './progress';
+export * from './activity-plan';
+export * from './recommendation';
