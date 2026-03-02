@@ -25,8 +25,8 @@ import {
   Users,
   MessageCircle,
 } from 'lucide-react';
-import type { CrisisAlert, CrisisLevel } from '@/domain/entities/crisis-alert';
-import { CRISIS_LEVELS } from '@/domain/entities/crisis-alert';
+import type { CrisisAlert, CrisisLevel } from '@/domain/services/crisis-detection.service';
+import { CRISIS_LEVELS } from '@/domain/services/crisis-detection.service';
 import { usePastoralLogStore } from '@/store/pastoralLogStore';
 import { useActivityPlanStore } from '@/store/activityPlanStore';
 import { CrisisDetectionService } from '@/domain/services/crisis-detection.service';

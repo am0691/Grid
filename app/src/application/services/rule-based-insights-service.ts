@@ -5,7 +5,8 @@
 
 import type { ActivityEvaluation, ActivityPlan } from '../../domain/entities/activity-plan';
 import type { Soul } from '../../domain/entities/soul';
-import type { EvaluationAnalysis, PersonalizedRecommendation, MBTIAdvice } from './ai-insights-service';
+import type { PastoralLog } from '../../domain/entities/pastoral-log';
+import type { EvaluationAnalysis, PersonalizedRecommendation, MBTIAdvice, SoulInsightSummary, WeeklySummary } from './ai-insights-service';
 
 export class RuleBasedInsightsService {
   /**
@@ -160,6 +161,125 @@ export class RuleBasedInsightsService {
       challenges: ['자신만의 방식 발견 필요', '균형 잡힌 성장 추구'],
       communicationTips: ['개인의 특성 존중', '열린 대화 유지', '맞춤형 접근'],
       activityPreferences: ['다양한 활동 시도', '자신에게 맞는 방식 탐색'],
+    };
+  }
+
+  /**
+   * Compute soul insight summary from pastoral logs and activities
+   */
+  computeSoulInsight(
+    soul: Soul,
+    logs: PastoralLog[],
+    activities: ActivityPlan[]
+  ): SoulInsightSummary {
+    const breakthroughCount = logs.filter(l => l.hasBreakthrough).length;
+    const lastLogDate = logs[0]?.recordedAt;
+    const recentLogs = logs.slice(0, 5);
+
+    // Compute overall trend from mood values
+    const moodScore = (mood: string) =>
+      mood === 'growing' ? 3 : mood === 'stable' ? 2 : 1;
+
+    let overallTrend: 'improving' | 'stable' | 'declining' = 'stable';
+    let moodTrend = '데이터 없음';
+
+    if (recentLogs.length >= 2) {
+      const first = moodScore(recentLogs[recentLogs.length - 1].mood);
+      const last = moodScore(recentLogs[0].mood);
+      if (last > first) {
+        overallTrend = 'improving';
+        moodTrend = '최근 긍정적 변화';
+      } else if (last < first) {
+        overallTrend = 'declining';
+        moodTrend = '최근 하락 추세';
+      } else {
+        overallTrend = 'stable';
+        moodTrend = '안정적 유지';
+      }
+    } else if (recentLogs.length === 1) {
+      const score = moodScore(recentLogs[0].mood);
+      moodTrend = score === 3 ? '성장 중' : score === 2 ? '정체기' : '어려움';
+    }
+
+    // Determine if attention is needed
+    const hasRecentStruggling = recentLogs.slice(0, 2).some(l => l.mood === 'struggling');
+    const daysSinceLastLog = lastLogDate
+      ? Math.floor((Date.now() - new Date(lastLogDate).getTime()) / (1000 * 60 * 60 * 24))
+      : Infinity;
+    const noRecentLogs = daysSinceLastLog >= 14;
+
+    const attentionNeeded = hasRecentStruggling || noRecentLogs;
+    let attentionReason: string | undefined;
+    if (hasRecentStruggling) {
+      attentionReason = '최근 어려움 상태가 감지되었습니다';
+    } else if (noRecentLogs) {
+      attentionReason = `마지막 기록으로부터 ${daysSinceLastLog}일이 경과했습니다`;
+    }
+
+    return {
+      soulId: soul.id,
+      soulName: soul.name,
+      overallTrend,
+      moodTrend,
+      activityCount: activities.length,
+      breakthroughCount,
+      lastLogDate,
+      attentionNeeded,
+      attentionReason,
+    };
+  }
+
+  /**
+   * Compute weekly summary from pastoral logs and activities for a given week
+   */
+  computeWeeklySummary(
+    logs: PastoralLog[],
+    activities: ActivityPlan[],
+    weekStart: Date
+  ): WeeklySummary {
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    const weekLogs = logs.filter(l => {
+      const d = new Date(l.recordedAt);
+      return d >= weekStart && d < weekEnd;
+    });
+    const weekActivities = activities.filter(a => {
+      const d = new Date(a.scheduledAt);
+      return d >= weekStart && d < weekEnd;
+    });
+
+    const breakthroughs = weekLogs.filter(l => l.hasBreakthrough).length;
+    const moodValues = weekLogs.map(l =>
+      l.mood === 'growing' ? 3 : l.mood === 'stable' ? 2 : 1
+    );
+    const averageMood = moodValues.length > 0
+      ? moodValues.reduce((a, b) => a + b, 0) / moodValues.length
+      : 2;
+
+    const highlights: string[] = [];
+    if (weekActivities.length > 0) {
+      highlights.push(`${weekActivities.length}개의 활동이 진행되었습니다`);
+    }
+    if (breakthroughs > 0) {
+      highlights.push(`${breakthroughs}명의 영적 돌파가 있었습니다`);
+    }
+    if (averageMood >= 2.5) {
+      highlights.push('전반적으로 긍정적인 무드를 유지했습니다');
+    } else if (averageMood < 1.5) {
+      highlights.push('여러 영혼이 어려움을 겪고 있습니다. 관심이 필요합니다');
+    }
+    if (highlights.length === 0) {
+      highlights.push('이번 주 기록이 없습니다');
+    }
+
+    return {
+      weekStart: weekStart.toISOString(),
+      totalActivities: weekActivities.length,
+      totalLogs: weekLogs.length,
+      breakthroughs,
+      averageMood,
+      highlights,
     };
   }
 

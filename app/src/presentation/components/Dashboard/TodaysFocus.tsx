@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { useSoulStore } from '@/store/soulStore';
-import type { CrisisAlert } from '@/domain/entities/crisis-alert';
+import type { CrisisAlert } from '@/domain/services/crisis-detection.service';
 
 const CRISIS_STORAGE_KEY = 'grid_crisis_alerts';
 

@@ -8,3 +8,4 @@ export * from './progress';
 export * from './activity-plan';
 export * from './pastoral-log';
 export * from './recommendation';
+export * from './encouragement';

@@ -14,9 +14,6 @@ import { Check, Star, Calendar, MessageSquare, Plus, Trash2, Sparkles, Heart, Gr
 import { CONVERT_AREAS, DISCIPLE_AREAS, CONVERT_WEEKS, DISCIPLE_MONTHS, getAreaMeta } from '@/types';
 import type { ActivityPlan } from '@/domain/entities/activity-plan';
 
-// 목양 케어 컴포넌트들
-import { CrisisAlertPanel } from '@/presentation/components/CrisisAlertPanel';
-import { ReproductionReadinessPanel } from '@/presentation/components/ReproductionReadinessPanel';
 
 interface GridViewProps {
   soul: Soul;
@@ -274,16 +271,6 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
         </div>
       </div>
 
-      {/* 목양 케어 뷰 */}
-      {activeTab === 'pastoral' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* 위기 알림 */}
-          <CrisisAlertPanel soulId={soul.id} soulName={soul.name} />
-
-          {/* 재생산 준비도 */}
-          <ReproductionReadinessPanel soulId={soul.id} soulName={soul.name} />
-        </div>
-      )}
 
       {/* 그리드 뷰 */}
       {activeTab === 'grid' && (

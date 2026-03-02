@@ -6,6 +6,7 @@
 import { GeminiClient } from '../../infrastructure/services/ai/gemini-client';
 import type { ActivityEvaluation, ActivityPlan } from '../../domain/entities/activity-plan';
 import type { Soul, SoulProfile } from '../../domain/entities/soul';
+import type { PastoralLog } from '../../domain/entities/pastoral-log';
 
 export interface EvaluationAnalysis {
   commonChallenges: string[];
@@ -26,6 +27,27 @@ export interface MBTIAdvice {
   activityPreferences: string[];
 }
 
+export interface SoulInsightSummary {
+  soulId: string;
+  soulName: string;
+  overallTrend: 'improving' | 'stable' | 'declining';
+  moodTrend: string;
+  activityCount: number;
+  breakthroughCount: number;
+  lastLogDate?: string;
+  attentionNeeded: boolean;
+  attentionReason?: string;
+}
+
+export interface WeeklySummary {
+  weekStart: string;
+  totalActivities: number;
+  totalLogs: number;
+  breakthroughs: number;
+  averageMood: number;
+  highlights: string[];
+}
+
 export class AIInsightsService {
   private client: GeminiClient;
 
@@ -34,10 +56,14 @@ export class AIInsightsService {
   }
 
   /**
-   * Analyze evaluation text to extract insights
+   * Analyze evaluation text to extract insights.
+   * Optionally accepts PastoralLog[] for mood/breakthrough analysis.
    */
-  async analyzeEvaluationText(evaluations: ActivityEvaluation[]): Promise<EvaluationAnalysis | null> {
-    if (evaluations.length === 0) {
+  async analyzeEvaluationText(
+    evaluations: ActivityEvaluation[],
+    logs?: PastoralLog[]
+  ): Promise<EvaluationAnalysis | null> {
+    if (evaluations.length === 0 && (!logs || logs.length === 0)) {
       return null;
     }
 
@@ -49,10 +75,21 @@ export class AIInsightsService {
 - 어려움: ${e.challengesFaced || '없음'}
 `).join('\n');
 
+    const logSummary = logs && logs.length > 0
+      ? logs.map((l, i) => `
+목회일지 ${i + 1}:
+- 무드: ${l.mood}
+- 돌파: ${l.hasBreakthrough ? '있음' : '없음'}
+- 관찰: ${l.observations || '없음'}
+`).join('\n')
+      : '';
+
     const prompt = `당신은 기독교 제자훈련 전문 상담사입니다.
 
 ## 평가 데이터
-${evaluationSummary}
+${evaluationSummary || '없음'}
+
+${logSummary ? `## 목회 일지 데이터\n${logSummary}` : ''}
 
 ## 분석 요청
 위 평가들을 분석하여 다음 JSON 형식으로 응답해주세요:
@@ -65,6 +102,125 @@ ${evaluationSummary}
 한국어로 응답해주세요.`;
 
     return this.client.generateJSON<EvaluationAnalysis>(prompt);
+  }
+
+  /**
+   * Compute soul insight summary using AI
+   */
+  async computeSoulInsight(
+    soul: Soul,
+    logs: PastoralLog[],
+    activities: ActivityPlan[]
+  ): Promise<SoulInsightSummary | null> {
+    const recentLogs = logs.slice(0, 5);
+    const moodHistory = recentLogs.map(l => l.mood).join(', ');
+    const breakthroughCount = logs.filter(l => l.hasBreakthrough).length;
+    const lastLogDate = logs[0]?.recordedAt;
+
+    const prompt = `당신은 기독교 제자훈련 전문 상담사입니다.
+
+## 영혼 정보
+- 이름: ${soul.name}
+- 최근 무드 히스토리: ${moodHistory || '없음'}
+- 돌파 횟수: ${breakthroughCount}
+- 총 활동 수: ${activities.length}
+
+다음 JSON 형식으로 인사이트를 제공해주세요:
+{
+  "overallTrend": "improving" | "stable" | "declining",
+  "moodTrend": "최근 무드 변화를 한줄로 설명",
+  "attentionNeeded": true | false,
+  "attentionReason": "관심 필요한 이유 (있을 경우)"
+}
+
+한국어로 응답해주세요.`;
+
+    const result = await this.client.generateJSON<{
+      overallTrend: 'improving' | 'stable' | 'declining';
+      moodTrend: string;
+      attentionNeeded: boolean;
+      attentionReason?: string;
+    }>(prompt);
+
+    if (!result) return null;
+
+    return {
+      soulId: soul.id,
+      soulName: soul.name,
+      overallTrend: result.overallTrend,
+      moodTrend: result.moodTrend,
+      activityCount: activities.length,
+      breakthroughCount,
+      lastLogDate,
+      attentionNeeded: result.attentionNeeded,
+      attentionReason: result.attentionReason,
+    };
+  }
+
+  /**
+   * Compute weekly summary using AI
+   */
+  async computeWeeklySummary(
+    logs: PastoralLog[],
+    activities: ActivityPlan[],
+    weekStart: Date
+  ): Promise<WeeklySummary | null> {
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    const weekLogs = logs.filter(l => {
+      const d = new Date(l.recordedAt);
+      return d >= weekStart && d < weekEnd;
+    });
+    const weekActivities = activities.filter(a => {
+      const d = new Date(a.scheduledAt);
+      return d >= weekStart && d < weekEnd;
+    });
+
+    const breakthroughs = weekLogs.filter(l => l.hasBreakthrough).length;
+    const moodValues = weekLogs.map(l =>
+      l.mood === 'growing' ? 3 : l.mood === 'stable' ? 2 : 1
+    );
+    const averageMood = moodValues.length > 0
+      ? moodValues.reduce((a, b) => a + b, 0) / moodValues.length
+      : 2;
+
+    if (weekLogs.length === 0 && weekActivities.length === 0) {
+      return {
+        weekStart: weekStart.toISOString(),
+        totalActivities: 0,
+        totalLogs: 0,
+        breakthroughs: 0,
+        averageMood: 2,
+        highlights: ['이번 주 기록이 없습니다'],
+      };
+    }
+
+    const prompt = `당신은 기독교 제자훈련 전문 상담사입니다.
+
+## 주간 데이터 (${weekStart.toLocaleDateString('ko-KR')} ~ ${weekEnd.toLocaleDateString('ko-KR')})
+- 총 활동: ${weekActivities.length}개
+- 목회 일지: ${weekLogs.length}개
+- 돌파 횟수: ${breakthroughs}개
+- 평균 무드: ${averageMood.toFixed(1)}/3
+
+다음 JSON 형식으로 주간 하이라이트를 제공해주세요:
+{
+  "highlights": ["주요 사항 1", "주요 사항 2"]
+}
+
+한국어로 응답해주세요.`;
+
+    const result = await this.client.generateJSON<{ highlights: string[] }>(prompt);
+
+    return {
+      weekStart: weekStart.toISOString(),
+      totalActivities: weekActivities.length,
+      totalLogs: weekLogs.length,
+      breakthroughs,
+      averageMood,
+      highlights: result?.highlights || [],
+    };
   }
 
   /**

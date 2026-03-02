@@ -10,12 +10,6 @@ import { useSoulDetailContext } from '@/presentation/layouts/SoulDetailLayout';
 import { PastoralLogList } from '@/presentation/components/PastoralLogList';
 import { PastoralLogForm } from '@/presentation/components/PastoralLogForm';
 import { CrisisAlertPanel } from '@/presentation/components/CrisisAlertPanel';
-import { ReproductionReadinessPanel } from '@/presentation/components/ReproductionReadinessPanel';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 import {
   Dialog,
   DialogContent,
@@ -23,7 +17,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import { usePastoralLogStore } from '@/store/pastoralLogStore';
 import { useActivityPlanStore } from '@/store/activityPlanStore';
 import type { CreatePastoralLogDto, PastoralLog } from '@/domain/entities/pastoral-log';
@@ -36,22 +29,6 @@ export function SoulCarePage() {
   // Form dialog state
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingLog, setEditingLog] = useState<PastoralLog | null>(null);
-
-  // Collapsible state for ReproductionReadinessPanel
-  const [readinessOpen, setReadinessOpen] = useState(false);
-
-  // Calculate if soul is eligible for reproduction readiness (disciples >6 months)
-  const showReproductionReadiness = useMemo(() => {
-    if (soul.trainingType !== 'disciple') return false;
-
-    const startDate = new Date(soul.startDate);
-    const today = new Date();
-    const diffMonths =
-      (today.getFullYear() - startDate.getFullYear()) * 12 +
-      (today.getMonth() - startDate.getMonth());
-
-    return diffMonths >= 6;
-  }, [soul.trainingType, soul.startDate]);
 
   // Available plans for form selector (incomplete plans only)
   const availablePlans = useMemo(() => {
@@ -134,36 +111,6 @@ export function SoulCarePage() {
         <CrisisAlertPanel soulId={soulId} soulName={soul.name} />
       </section>
 
-      {/* 재생산 준비도 (conditional - disciples >6 months) */}
-      {showReproductionReadiness && (
-        <section>
-          <Collapsible open={readinessOpen} onOpenChange={setReadinessOpen}>
-            <div className="rounded-lg border bg-card">
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between p-4 h-auto hover:bg-muted/50"
-                >
-                  <span className="text-base font-medium">재생산 준비도</span>
-                  {readinessOpen ? (
-                    <ChevronUp className="h-5 w-5 text-muted-foreground" />
-                  ) : (
-                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="px-4 pb-4">
-                  <ReproductionReadinessPanel
-                    soulId={soulId}
-                    soulName={soul.name}
-                  />
-                </div>
-              </CollapsibleContent>
-            </div>
-          </Collapsible>
-        </section>
-      )}
     </div>
   );
 }
