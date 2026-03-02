@@ -11,7 +11,9 @@
 
 export type TrainingType = 'convert' | 'disciple';
 export type ProgressStatus = 'completed' | 'current' | 'future';
-export type PlanType = 'recommended' | 'custom';
+export type SpiritualMood = 'growing' | 'stable' | 'struggling';
+export type ActivityType = 'meeting' | 'call' | 'study' | 'event' | 'prayer' | 'other';
+export type ActivityStatus = 'planned' | 'in-progress' | 'completed' | 'cancelled';
 
 // ============================================================================
 // Database Table Types
@@ -40,6 +42,14 @@ export interface Soul {
   start_date: string; // ISO 8601 date (YYYY-MM-DD)
   created_at: string; // ISO 8601 timestamp
   updated_at: string; // ISO 8601 timestamp
+  // Phase 1 추가 필드
+  phone_number: string | null;
+  email: string | null;
+  address: string | null;
+  birth_date: string | null;
+  notes: string | null;
+  is_active: boolean;
+  profile: Record<string, unknown> | null; // JSONB
 }
 
 /**
@@ -63,12 +73,16 @@ export interface Progress {
 export interface ActivityPlan {
   id: string; // UUID
   soul_id: string; // UUID - references souls.id
+  title: string;
+  type: ActivityType; // 'meeting' | 'call' | ...
+  status: ActivityStatus; // 'planned' | 'in-progress' | ...
+  scheduled_at: string; // ISO 8601 timestamp
+  completed_at: string | null; // ISO 8601 timestamp
   area_id: string;
   week: number;
-  plan_type: PlanType;
-  title: string;
+  location: string | null;
   description: string | null;
-  is_completed: boolean;
+  notes: string | null;
   created_at: string; // ISO 8601 timestamp
   updated_at: string; // ISO 8601 timestamp
 }
@@ -85,6 +99,45 @@ export interface ActivityRecommendation {
   description: string;
   bible_verse: string | null;
   tips: string | null;
+}
+
+/**
+ * Pastoral log entries (통합 목양 일지)
+ */
+export interface PastoralLog {
+  id: string; // UUID
+  soul_id: string; // UUID - references souls.id
+  activity_plan_id: string | null; // UUID - references activity_plans.id
+  user_id: string; // UUID - references auth.users(id)
+
+  // Activity evaluation
+  rating: number | null; // 1-5
+  evaluation_notes: string | null;
+
+  // Spiritual state (required)
+  mood: SpiritualMood;
+  hunger_level: number; // 1-5
+  closeness_level: number; // 1-5
+  observations: string | null;
+  concerns: string | null;
+  praises: string | null;
+  prayer_needs: string | null;
+
+  // Breakthrough
+  has_breakthrough: boolean;
+  breakthrough_category: string | null;
+  breakthrough_title: string | null;
+  breakthrough_description: string | null;
+  bible_references: Record<string, unknown>[] | null; // JSONB
+
+  // Next steps
+  next_steps: string | null;
+  follow_up_actions: string[] | null; // JSONB
+
+  // Timestamps
+  recorded_at: string; // ISO 8601 timestamp
+  created_at: string; // ISO 8601 timestamp
+  updated_at: string; // ISO 8601 timestamp
 }
 
 // ============================================================================
@@ -109,16 +162,23 @@ export type ProgressInsert = Omit<Progress, 'id' | 'created_at' | 'updated_at'> 
   updated_at?: string;
 };
 
-export type ActivityPlanInsert = Omit<ActivityPlan, 'id' | 'created_at' | 'updated_at'> & {
+export type ActivityPlanInsert = Omit<ActivityPlan, 'id' | 'created_at' | 'updated_at' | 'completed_at'> & {
   id?: string;
-  plan_type?: PlanType;
-  is_completed?: boolean;
+  type?: ActivityType;
+  status?: ActivityStatus;
+  completed_at?: string | null;
   created_at?: string;
   updated_at?: string;
 };
 
 export type ActivityRecommendationInsert = Omit<ActivityRecommendation, 'id'> & {
   id?: string;
+};
+
+export type PastoralLogInsert = Omit<PastoralLog, 'id' | 'created_at' | 'updated_at'> & {
+  id?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
 // ============================================================================
@@ -134,6 +194,8 @@ export type ProgressUpdate = Partial<Omit<Progress, 'id' | 'soul_id' | 'created_
 export type ActivityPlanUpdate = Partial<Omit<ActivityPlan, 'id' | 'soul_id' | 'created_at' | 'updated_at'>>;
 
 export type ActivityRecommendationUpdate = Partial<Omit<ActivityRecommendation, 'id' | 'training_type' | 'area_id' | 'week'>>;
+
+export type PastoralLogUpdate = Partial<Omit<PastoralLog, 'id' | 'soul_id' | 'user_id' | 'created_at' | 'updated_at'>>;
 
 // ============================================================================
 // Relations Types (with joined data)
@@ -169,6 +231,13 @@ export interface SoulWithDetails extends Soul {
   activity_plans: ActivityPlan[];
 }
 
+/**
+ * Pastoral log with related soul
+ */
+export interface PastoralLogWithSoul extends PastoralLog {
+  soul: Soul;
+}
+
 // ============================================================================
 // Query Filter Types
 // ============================================================================
@@ -191,14 +260,23 @@ export interface ActivityPlanFilter {
   soul_id?: string;
   area_id?: string;
   week?: number;
-  plan_type?: PlanType;
-  is_completed?: boolean;
+  type?: ActivityType;
+  status?: ActivityStatus;
 }
 
 export interface ActivityRecommendationFilter {
   training_type?: TrainingType;
   area_id?: string;
   week?: number;
+}
+
+export interface PastoralLogFilter {
+  soul_id?: string;
+  mood?: SpiritualMood;
+  has_breakthrough?: boolean;
+  recorded_at_from?: string;
+  recorded_at_to?: string;
+  activity_plan_id?: string;
 }
 
 // ============================================================================
@@ -263,6 +341,11 @@ export interface Database {
         Insert: ActivityRecommendationInsert;
         Update: ActivityRecommendationUpdate;
       };
+      pastoral_logs: {
+        Row: PastoralLog;
+        Insert: PastoralLogInsert;
+        Update: PastoralLogUpdate;
+      };
     };
     Views: {
       [_ in never]: never;
@@ -285,7 +368,9 @@ export interface Database {
     Enums: {
       training_type: TrainingType;
       progress_status: ProgressStatus;
-      plan_type: PlanType;
+      spiritual_mood: SpiritualMood;
+      activity_type: ActivityType;
+      activity_status: ActivityStatus;
     };
   };
 }

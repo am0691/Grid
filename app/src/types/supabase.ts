@@ -18,16 +18,17 @@ export type {
   ActivityPlanUpdate,
   TrainingType,
   ProgressStatus,
-  PlanType,
+  ActivityType,
+  ActivityStatus,
   Database,
 } from '@/infrastructure/database/schema';
 
-// Repository Types
+// Domain Entity Types
 export type {
   ActivityPlan as ActivityPlanEntity,
-  CreatePlanInput,
-  UpdatePlanInput,
-} from '@/infrastructure/repositories/supabase/activity-plan-repository';
+  CreateActivityPlanDto,
+  UpdateActivityPlanDto,
+} from '@/domain/entities/activity-plan';
 
 // Store Types
 export type {

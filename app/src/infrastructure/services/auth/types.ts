@@ -14,6 +14,7 @@ export interface AuthResult {
   user?: User;
   session?: Session;
   error?: AuthError;
+  emailConfirmationRequired?: boolean;
 }
 
 /**

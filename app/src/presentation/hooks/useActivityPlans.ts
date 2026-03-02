@@ -5,7 +5,7 @@
 
 import { useEffect, useMemo } from 'react';
 import { useActivityPlanStore } from '@/store/activityPlanStore';
-import type { CreatePlanInput } from '@/infrastructure/repositories/supabase/activity-plan-repository';
+import type { CreateActivityPlanDto } from '@/domain/entities/activity-plan';
 
 interface UseActivityPlansOptions {
   soulId: string | null;
@@ -46,8 +46,8 @@ export const useActivityPlans = (options: UseActivityPlansOptions) => {
   // 완료/미완료로 분류
   const categorizedPlans = useMemo(() => {
     return {
-      pending: soulPlans.filter((p) => !p.isCompleted),
-      completed: soulPlans.filter((p) => p.isCompleted),
+      pending: soulPlans.filter((p) => p.status !== 'completed'),
+      completed: soulPlans.filter((p) => p.status === 'completed'),
     };
   }, [soulPlans]);
 
@@ -55,11 +55,11 @@ export const useActivityPlans = (options: UseActivityPlansOptions) => {
   const stats = useMemo(() => {
     return {
       total: soulPlans.length,
-      completed: soulPlans.filter((p) => p.isCompleted).length,
-      pending: soulPlans.filter((p) => !p.isCompleted).length,
+      completed: soulPlans.filter((p) => p.status === 'completed').length,
+      pending: soulPlans.filter((p) => p.status !== 'completed').length,
       completionRate:
         soulPlans.length > 0
-          ? Math.round((soulPlans.filter((p) => p.isCompleted).length / soulPlans.length) * 100)
+          ? Math.round((soulPlans.filter((p) => p.status === 'completed').length / soulPlans.length) * 100)
           : 0,
     };
   }, [soulPlans]);
@@ -81,7 +81,7 @@ export const useActivityPlans = (options: UseActivityPlansOptions) => {
 
     // 액션
     fetchPlans: () => (soulId ? fetchPlans(soulId) : Promise.resolve()),
-    addPlan: (input: Omit<CreatePlanInput, 'soulId'>) =>
+    addPlan: (input: Omit<CreateActivityPlanDto, 'soulId'>) =>
       soulId ? addPlan({ ...input, soulId }) : Promise.resolve(),
     updatePlan,
     deletePlan,

@@ -42,3 +42,26 @@ export interface IAnalyticsService {
   trackPageView(pageName: string): void;
   setUserId(userId: string): void;
 }
+
+/**
+ * PDF Metadata Type
+ */
+export interface PdfMetadata {
+  title?: string;
+  author?: string;
+  subject?: string;
+  keywords?: string;
+  creator?: string;
+  producer?: string;
+  creationDate?: Date;
+  modificationDate?: Date;
+  pageCount: number;
+}
+
+/**
+ * PDF Parser Service Interface
+ */
+export interface IPdfParserService {
+  extractText(file: File): Promise<string>;
+  extractMetadata(file: File): Promise<PdfMetadata>;
+}

@@ -21,6 +21,7 @@ import type {
   Area,
   ProgressStatus
 } from '@/types';
+import type { SoulProfile } from '@/domain/entities/soul';
 import {
   createDefaultProgress,
   CONVERT_WEEKS,
@@ -38,7 +39,7 @@ interface GridState {
   filter: 'all' | 'convert' | 'disciple';
   
   // 액션
-  addSoul: (name: string, trainingType: TrainingType, startDate: string) => string;
+  addSoul: (name: string, trainingType: TrainingType, startDate: string, profile?: SoulProfile) => string;
   updateSoul: (soulId: string, updates: Partial<Soul>) => void;
   deleteSoul: (soulId: string) => void;
   
@@ -78,17 +79,18 @@ export const useGridStore = create<GridState>()(
       filter: 'all',
 
       // 영혼 추가
-      addSoul: (name: string, trainingType: TrainingType, startDate: string) => {
+      addSoul: (name: string, trainingType: TrainingType, startDate: string, profile?: SoulProfile) => {
         const soulId = generateId();
         const now = new Date().toISOString();
-        
+
         const newSoul: Soul = {
           id: soulId,
           name,
           trainingType,
           startDate,
           createdAt: now,
-          updatedAt: now
+          updatedAt: now,
+          profile
         };
 
         const defaultProgress = createDefaultProgress(trainingType);

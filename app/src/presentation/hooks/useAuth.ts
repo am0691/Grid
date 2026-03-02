@@ -6,12 +6,16 @@
 import { createContext, useContext } from 'react';
 import type { User } from '@/domain/entities';
 
+export interface SignUpResult {
+  emailConfirmationRequired: boolean;
+}
+
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string) => Promise<SignUpResult>;
   signOut: () => Promise<void>;
 }
 

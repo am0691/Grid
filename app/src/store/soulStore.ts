@@ -5,6 +5,7 @@
 
 import { create } from 'zustand';
 import type { Soul } from '@/types';
+import type { SoulProfile } from '@/domain/entities/soul';
 import {
   getSouls,
   createSoul as createSoulRepo,
@@ -17,10 +18,21 @@ export interface CreateSoulInput {
   name: string;
   trainingType: 'convert' | 'disciple';
   startDate: string;
+  phoneNumber?: string;
+  email?: string;
+  notes?: string;
+  profile?: SoulProfile;
 }
 
 export interface UpdateSoulInput {
   name?: string;
+  phoneNumber?: string;
+  email?: string;
+  address?: string;
+  birthDate?: string;
+  notes?: string;
+  isActive?: boolean;
+  profile?: SoulProfile;
 }
 
 interface SoulStore {
@@ -89,6 +101,10 @@ export const useSoulStore = create<SoulStore>((set, get) => ({
         name: input.name,
         trainingType: input.trainingType,
         startDate: input.startDate,
+        phoneNumber: input.phoneNumber,
+        email: input.email,
+        notes: input.notes,
+        profile: input.profile,
       });
 
       // 진도 초기화

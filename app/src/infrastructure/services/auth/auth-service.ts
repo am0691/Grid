@@ -80,10 +80,14 @@ export const signUpWithEmail = async (data: SignUpData): Promise<AuthResult> => 
     // 3. 프로필 조회
     const profile = await getProfile(authData.user.id);
 
+    // 4. 이메일 인증 필요 여부 확인 (세션이 없으면 이메일 인증 대기 중)
+    const emailConfirmationRequired = !authData.session;
+
     return {
       success: true,
       user: mapSupabaseUserToDomain(authData.user, profile || undefined),
       session: authData.session || undefined,
+      emailConfirmationRequired,
     };
   } catch (error) {
     return {
@@ -109,11 +113,18 @@ export const signInWithEmail = async (data: SignInData): Promise<AuthResult> => 
     });
 
     if (authError) {
+      // 이메일 미인증 에러 처리
+      const isEmailNotConfirmed =
+        authError.message?.toLowerCase().includes('email not confirmed') ||
+        authError.message?.toLowerCase().includes('email_not_confirmed');
+
       return {
         success: false,
         error: {
-          code: authError.name || 'SIGNIN_ERROR',
-          message: authError.message,
+          code: isEmailNotConfirmed ? 'EMAIL_NOT_CONFIRMED' : (authError.name || 'SIGNIN_ERROR'),
+          message: isEmailNotConfirmed
+            ? '이메일 인증이 필요합니다. 가입 시 입력한 이메일의 받은편지함을 확인해주세요.'
+            : authError.message,
           status: authError.status,
         },
       };

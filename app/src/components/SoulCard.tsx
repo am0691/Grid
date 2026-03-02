@@ -2,7 +2,7 @@ import type { Soul, AreaProgress } from '@/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { User, Calendar, TrendingUp } from 'lucide-react';
+import { User, Calendar, TrendingUp, AlertTriangle } from 'lucide-react';
 import { CONVERT_AREAS, DISCIPLE_AREAS, CONVERT_WEEKS, DISCIPLE_MONTHS } from '@/types';
 
 interface SoulCardProps {
@@ -10,11 +10,34 @@ interface SoulCardProps {
   progress: AreaProgress[];
   overallProgress: number;
   onClick: () => void;
+  temperatureMood?: 'growing' | 'stable' | 'struggling';
+  hasCrisisAlert?: boolean;
+  needsAttention?: boolean;
 }
 
-export function SoulCard({ soul, progress, overallProgress, onClick }: SoulCardProps) {
+export function SoulCard({
+  soul,
+  progress,
+  overallProgress,
+  onClick,
+  temperatureMood,
+  hasCrisisAlert,
+  needsAttention
+}: SoulCardProps) {
   const areas = soul.trainingType === 'convert' ? CONVERT_AREAS : DISCIPLE_AREAS;
   const maxWeek = soul.trainingType === 'convert' ? CONVERT_WEEKS : DISCIPLE_MONTHS;
+
+  // Temperature mood colors
+  const getTempColor = () => {
+    switch (temperatureMood) {
+      case 'growing': return '#22c55e'; // green
+      case 'stable': return '#f59e0b'; // amber
+      case 'struggling': return '#ef4444'; // red
+      default: return null;
+    }
+  };
+
+  const tempColor = getTempColor();
   
   // 영역별 진도 요약
   const getAreaSummary = () => {
@@ -39,25 +62,43 @@ export function SoulCard({ soul, progress, overallProgress, onClick }: SoulCardP
     : 1;
 
   return (
-    <Card 
-      className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-primary/50"
+    <Card
+      className={`cursor-pointer hover:shadow-lg transition-all duration-200 border-2 ${
+        needsAttention
+          ? 'border-orange-400 bg-orange-50/30'
+          : 'hover:border-primary/50'
+      }`}
       onClick={onClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center relative">
               <User className="w-5 h-5 text-primary" />
+              {tempColor && (
+                <div
+                  className="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
+                  style={{ backgroundColor: tempColor }}
+                  title={`영적 상태: ${temperatureMood === 'growing' ? '성장' : temperatureMood === 'stable' ? '안정' : '어려움'}`}
+                />
+              )}
             </div>
             <div>
-              <h3 className="font-semibold text-lg">{soul.name}</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-lg">{soul.name}</h3>
+                {hasCrisisAlert && (
+                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-red-500" title="위기 경보">
+                    <AlertTriangle className="w-3 h-3 text-white" />
+                  </div>
+                )}
+              </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="w-3 h-3" />
                 <span>시작: {soul.startDate}</span>
               </div>
             </div>
           </div>
-          <Badge 
+          <Badge
             variant={soul.trainingType === 'convert' ? 'default' : 'secondary'}
             className="text-xs"
           >

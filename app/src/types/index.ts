@@ -1,5 +1,7 @@
 // GRID 웹서비스 타입 정의
 
+export type { Soul, SoulProfile } from '@/domain/entities/soul';
+
 export type TrainingType = 'convert' | 'disciple';
 
 export type ConvertArea = 
@@ -53,17 +55,6 @@ export interface AreaProgress {
   areaId: Area;
   currentWeek: number;  // 현재 진행 중인 주차/월차
   items: ProgressItem[];
-}
-
-// 영혼 (양육 받는 사람)
-export interface Soul {
-  id: string;
-  name: string;
-  trainingType: TrainingType;
-  startDate: string;    // 시작일 (ISO string)
-  createdAt: string;
-  updatedAt: string;
-  // 진도 정보는 별도로 관리
 }
 
 // 완전한 영혼 정보 (진도 포함)

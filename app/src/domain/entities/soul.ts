@@ -5,6 +5,35 @@
 
 import type { TrainingType } from '../value-objects/training-type';
 
+export interface SoulProfile {
+  // Basic background
+  ageGroup?: 'teens' | '20s' | '30s' | '40s' | '50s' | '60s+';
+  gender?: 'male' | 'female';
+  occupation?: string;
+  mbti?: string;
+
+  // Faith background
+  faithBackground?: 'new' | 'returned' | 'transferred' | 'seeker';
+  previousChurchExperience?: string;
+  hasSalvationAssurance?: boolean;
+  salvationDate?: string;
+
+  // Personality & learning
+  personalityType?: 'analytical' | 'relational' | 'experiential' | 'practical';
+  learningStyle?: 'visual' | 'auditory' | 'reading' | 'kinesthetic';
+  preferredMeetingType?: 'in-person' | 'online' | 'both';
+
+  // Interests & gifts
+  interests?: string[];
+  perceivedGifts?: string[];
+  servingAreas?: string[];
+
+  // Pastoral notes
+  spiritualGoals?: string;
+  challenges?: string;
+  specialNeeds?: string;
+}
+
 export interface Soul {
   id: string;
   name: string;
@@ -14,15 +43,18 @@ export interface Soul {
   updatedAt: string;
   trainerId?: string;   // 양육자 ID
   isActive: boolean;    // 활성 상태
-}
-
-export interface SoulDetails extends Soul {
+  // from SoulDetails
   phoneNumber?: string;
   email?: string;
   address?: string;
   birthDate?: string;
   notes?: string;
+  // SoulProfile as JSONB
+  profile?: SoulProfile;
 }
+
+/** @deprecated Use Soul directly. SoulDetails is now an alias for Soul. */
+export type SoulDetails = Soul;
 
 export interface CreateSoulDto {
   name: string;
@@ -32,6 +64,7 @@ export interface CreateSoulDto {
   phoneNumber?: string;
   email?: string;
   notes?: string;
+  profile?: SoulProfile;
 }
 
 export interface UpdateSoulDto {
@@ -42,4 +75,5 @@ export interface UpdateSoulDto {
   birthDate?: string;
   notes?: string;
   isActive?: boolean;
+  profile?: SoulProfile;
 }

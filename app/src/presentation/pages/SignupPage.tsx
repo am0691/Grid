@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
-import { UserPlus, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { UserPlus, AlertCircle, CheckCircle2, Mail } from 'lucide-react';
 
 // Zod 스키마 정의
 const signupSchema = z
@@ -50,6 +50,7 @@ export const SignupPage = () => {
   });
   const [errors, setErrors] = useState<Partial<Record<keyof SignupFormData, string>>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [emailConfirmationSent, setEmailConfirmationSent] = useState(false);
 
   const handleChange = (field: keyof SignupFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -88,12 +89,61 @@ export const SignupPage = () => {
     }
 
     try {
-      await signUp(formData.email, formData.password, formData.name);
-      navigate('/');
+      const result = await signUp(formData.email, formData.password, formData.name);
+
+      if (result.emailConfirmationRequired) {
+        // 이메일 인증이 필요한 경우 안내 메시지 표시
+        setEmailConfirmationSent(true);
+      } else {
+        // 이메일 인증이 필요 없는 경우 바로 홈으로 이동
+        navigate('/');
+      }
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : '회원가입에 실패했습니다.');
     }
   };
+
+  // 이메일 인증 안내 화면
+  if (emailConfirmationSent) {
+    return (
+      <AuthLayout
+        title="이메일을 확인해주세요"
+        description="회원가입이 거의 완료되었습니다"
+      >
+        <div className="space-y-6 text-center">
+          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+            <Mail className="h-8 w-8 text-primary" />
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-muted-foreground">
+              <span className="font-semibold text-foreground">{formData.email}</span>
+              로 인증 메일을 보냈습니다.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              받은편지함에서 인증 링크를 클릭하면 가입이 완료됩니다.
+            </p>
+          </div>
+
+          <Alert className="text-left">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              메일이 보이지 않으면 스팸함을 확인해주세요.
+            </AlertDescription>
+          </Alert>
+
+          <div className="pt-4">
+            <Link
+              to="/login"
+              className="font-semibold text-primary hover:underline underline-offset-4 transition-colors"
+            >
+              로그인 페이지로 이동
+            </Link>
+          </div>
+        </div>
+      </AuthLayout>
+    );
+  }
 
   return (
     <AuthLayout

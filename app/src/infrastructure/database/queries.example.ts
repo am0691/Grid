@@ -307,7 +307,7 @@ export async function getIncompleteActivities(soulId: string) {
     .from('activity_plans')
     .select('*')
     .eq('soul_id', soulId)
-    .eq('is_completed', false)
+    .neq('status', 'completed')
     .order('week');
 
   return { data, error };
@@ -339,10 +339,13 @@ export async function createPlanFromRecommendation(
     soul_id: soulId,
     area_id: areaId,
     week,
-    plan_type: 'recommended',
+    type: 'meeting',
+    status: 'planned',
+    scheduled_at: new Date().toISOString(),
     title: recommendation.title,
     description: `${recommendation.description}\n\n성경구절: ${recommendation.bible_verse}\n\n팁: ${recommendation.tips}`,
-    is_completed: false,
+    location: null,
+    notes: null,
   };
 
   return createActivityPlan(plan);
@@ -356,7 +359,7 @@ export async function updateActivityPlan(
   updates: {
     title?: string;
     description?: string;
-    is_completed?: boolean;
+    status?: string;
   }
 ) {
   const { data, error } = await supabase
@@ -372,10 +375,13 @@ export async function updateActivityPlan(
 /**
  * Toggle activity completion
  */
-export async function toggleActivityCompletion(planId: string, isCompleted: boolean) {
+export async function toggleActivityCompletion(planId: string, completed: boolean) {
   const { data, error } = await supabase
     .from('activity_plans')
-    .update({ is_completed: isCompleted })
+    .update({
+      status: completed ? 'completed' : 'planned',
+      completed_at: completed ? new Date().toISOString() : null,
+    })
     .eq('id', planId)
     .select()
     .single();
@@ -502,7 +508,7 @@ export async function getSoulDashboard(soulId: string) {
         area_id,
         week,
         title,
-        is_completed
+        status
       )
     `)
     .eq('id', soulId)
@@ -553,12 +559,12 @@ export async function getWeeklySummary(userId: string) {
       activity_plans!inner (
         id,
         title,
-        is_completed
+        status
       )
     `)
     .eq('user_id', userId)
     .eq('progress.status', 'current')
-    .eq('activity_plans.is_completed', false);
+    .neq('activity_plans.status', 'completed');
 
   return { data, error };
 }

@@ -4,17 +4,12 @@
  */
 
 import { create } from 'zustand';
-import type {
-  ActivityPlan,
-  CreatePlanInput,
-  UpdatePlanInput,
-} from '@/infrastructure/repositories/supabase/activity-plan-repository';
+import type { ActivityPlan, CreateActivityPlanDto, UpdateActivityPlanDto } from '@/domain/entities/activity-plan';
 import {
   getPlansBySoulId,
   createPlan as createPlanRepo,
   updatePlan as updatePlanRepo,
   deletePlan as deletePlanRepo,
-  togglePlanComplete as togglePlanRepo,
 } from '@/infrastructure/repositories/supabase/activity-plan-repository';
 
 interface ActivityPlanStore {
@@ -25,8 +20,8 @@ interface ActivityPlanStore {
 
   // 액션
   fetchPlans: (soulId: string) => Promise<void>;
-  addPlan: (plan: CreatePlanInput) => Promise<void>;
-  updatePlan: (id: string, updates: UpdatePlanInput) => Promise<void>;
+  addPlan: (plan: CreateActivityPlanDto) => Promise<void>;
+  updatePlan: (id: string, updates: UpdateActivityPlanDto) => Promise<void>;
   deletePlan: (id: string) => Promise<void>;
   togglePlanComplete: (id: string) => Promise<void>;
 
@@ -61,18 +56,20 @@ export const useActivityPlanStore = create<ActivityPlanStore>((set, get) => ({
   },
 
   // 활동 계획 추가 (Optimistic Update)
-  addPlan: async (input: CreatePlanInput) => {
+  addPlan: async (input: CreateActivityPlanDto) => {
     // Optimistic update: 임시 ID로 즉시 UI 업데이트
     const tempId = `temp-${Date.now()}`;
     const tempPlan: ActivityPlan = {
       id: tempId,
       soulId: input.soulId,
+      title: input.title,
+      type: input.type,
+      status: 'planned',
+      scheduledAt: input.scheduledAt,
       areaId: input.areaId,
       week: input.week,
-      planType: input.planType || 'custom',
-      title: input.title,
-      description: input.description || null,
-      isCompleted: false,
+      location: input.location,
+      description: input.description,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -115,7 +112,7 @@ export const useActivityPlanStore = create<ActivityPlanStore>((set, get) => ({
   },
 
   // 활동 계획 업데이트 (Optimistic Update)
-  updatePlan: async (id: string, updates: UpdatePlanInput) => {
+  updatePlan: async (id: string, updates: UpdateActivityPlanDto) => {
     // 해당 Plan이 속한 soulId 찾기
     let soulId: string | null = null;
     const previousPlans = { ...get().plans };
@@ -209,18 +206,18 @@ export const useActivityPlanStore = create<ActivityPlanStore>((set, get) => ({
     }
   },
 
-  // 활동 계획 완료 토글
+  // 활동 계획 완료 토글 (status 기반)
   togglePlanComplete: async (id: string) => {
-    // 해당 Plan이 속한 soulId와 현재 완료 상태 찾기
+    // 해당 Plan이 속한 soulId와 현재 상태 찾기
     let soulId: string | null = null;
-    let currentIsCompleted = false;
+    let currentStatus: string = 'planned';
     const previousPlans = { ...get().plans };
 
     for (const [sid, plans] of Object.entries(previousPlans)) {
       const plan = plans.find((p) => p.id === id);
       if (plan) {
         soulId = sid;
-        currentIsCompleted = plan.isCompleted;
+        currentStatus = plan.status;
         break;
       }
     }
@@ -229,13 +226,17 @@ export const useActivityPlanStore = create<ActivityPlanStore>((set, get) => ({
       throw new Error('Plan not found');
     }
 
+    const newStatus = currentStatus === 'completed' ? 'planned' : 'completed';
+    const now = new Date().toISOString();
+    const completedAt = newStatus === 'completed' ? now : undefined;
+
     // Optimistic update
     set((state) => ({
       plans: {
         ...state.plans,
         [soulId!]: state.plans[soulId!].map((p) =>
           p.id === id
-            ? { ...p, isCompleted: !currentIsCompleted, updatedAt: new Date().toISOString() }
+            ? { ...p, status: newStatus as ActivityPlan['status'], completedAt, updatedAt: now }
             : p
         ),
       },
@@ -245,7 +246,7 @@ export const useActivityPlanStore = create<ActivityPlanStore>((set, get) => ({
 
     try {
       // 실제 DB 업데이트
-      const updatedPlan = await togglePlanRepo(id);
+      const updatedPlan = await updatePlanRepo(id, { status: newStatus as ActivityPlan['status'], completedAt });
 
       set((state) => ({
         plans: {

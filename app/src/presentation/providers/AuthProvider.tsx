@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Demo Mode: 즉시 회원가입
     if (isDemoMode) {
       setUser({ ...DEMO_USER, email, fullName: name });
-      return;
+      return { emailConfirmationRequired: false };
     }
 
     try {
@@ -121,7 +121,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         throw new Error(result.error?.message);
       }
 
-      setUser(result.user || null);
+      // 이메일 인증이 필요하지 않은 경우에만 사용자 설정
+      if (!result.emailConfirmationRequired) {
+        setUser(result.user || null);
+      }
+
+      return { emailConfirmationRequired: result.emailConfirmationRequired || false };
     } catch (err) {
       const message = err instanceof Error ? err.message : '회원가입에 실패했습니다.';
       setError(message);
