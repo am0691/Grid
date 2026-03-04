@@ -12,90 +12,11 @@ import { useState, useEffect } from 'react';
 import { Search, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
-
-// Placeholder components - to be implemented later
-const Sidebar = ({ className }: { className?: string }) => (
-  <aside className={cn('border-r bg-muted/30', className)}>
-    <div className="p-6">
-      <h2 className="text-2xl font-black tracking-tighter bg-gradient-to-br from-slate-900 via-blue-800 to-indigo-900 dark:from-slate-100 dark:via-blue-200 dark:to-indigo-100 bg-clip-text text-transparent">
-        GRID
-      </h2>
-      <p className="text-xs text-muted-foreground mt-1">영적 성장 추적</p>
-    </div>
-    {/* Sidebar navigation items will be implemented */}
-    <nav className="px-4 space-y-2">
-      <div className="text-sm text-muted-foreground px-3 py-2">
-        Navigation items coming soon...
-      </div>
-    </nav>
-  </aside>
-);
-
-const MobileNav = ({ className }: { className?: string }) => (
-  <nav className={cn('border-t bg-background', className)}>
-    <div className="flex items-center justify-around h-16 px-4">
-      <div className="text-xs text-muted-foreground">
-        Mobile nav coming soon...
-      </div>
-    </div>
-  </nav>
-);
-
-const NotificationCenter = () => (
-  <div className="relative">
-    {/* Placeholder for notification center */}
-    <Button variant="ghost" size="icon-sm">
-      <div className="w-2 h-2 rounded-full bg-red-500 absolute top-1.5 right-1.5" />
-      <span className="sr-only">알림</span>
-      🔔
-    </Button>
-  </div>
-);
-
-const GlobalSearch = ({
-  open,
-  onOpenChange
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) => {
-  if (!open) return null;
-
-  return (
-    <div
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-      onClick={() => onOpenChange(false)}
-    >
-      <div
-        className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-background rounded-lg shadow-2xl border p-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center gap-2 mb-4">
-          <Search className="w-5 h-5 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="검색... (Cmd+K)"
-            className="flex-1 bg-transparent outline-none text-lg"
-            autoFocus
-          />
-        </div>
-        <div className="text-sm text-muted-foreground">
-          Global search coming soon...
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const QuickActionsButton = () => (
-  <Button
-    size="icon-lg"
-    className="fixed bottom-6 right-6 rounded-full shadow-lg z-40 md:bottom-8 md:right-8"
-  >
-    <span className="text-xl">⚡</span>
-  </Button>
-);
+import { Sidebar } from '../components/Navigation/Sidebar';
+import { MobileNav } from '../components/Navigation/MobileNav';
+import { GlobalSearch } from '../components/Search/GlobalSearch';
+import { NotificationCenter } from '../components/Notifications/NotificationCenter';
+import { QuickActionsButton } from '../components/QuickActions/QuickActionsButton';
 
 export function MainLayout() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -170,7 +91,7 @@ export function MainLayout() {
       <MobileNav className="md:hidden fixed bottom-0 left-0 right-0 z-20" />
 
       {/* Global Search Modal */}
-      <GlobalSearch open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+      <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
       {/* Quick Actions FAB */}
       <QuickActionsButton />

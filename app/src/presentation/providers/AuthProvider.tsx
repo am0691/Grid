@@ -13,6 +13,7 @@ import {
   getCurrentUser,
   onAuthStateChange,
 } from '@/infrastructure/services/auth/auth-service';
+import { supabase } from '@/infrastructure/services/supabase/client';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -32,7 +33,7 @@ const DEMO_USER: User = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(isDemoMode ? DEMO_USER : null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(!isDemoMode);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,15 +44,41 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    // 초기 사용자 세션 확인
+    // 초기 사용자 세션 확인 (타임아웃 보호)
     const initAuth = async () => {
+      let resolved = false;
+
+      // 3초 안전장치: Supabase 응답 없으면 강제로 로그인 페이지로
+      const timer = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          console.warn('[GRID] Auth timeout - localStorage 정리 후 로그인 페이지로 이동');
+          // Supabase 호출 없이 직접 localStorage 정리
+          try {
+            const storageKey = `sb-aryeyzovzpysnedhvlih-auth-token`;
+            localStorage.removeItem(storageKey);
+          } catch {}
+          setUser(null);
+          setLoading(false);
+        }
+      }, 3000);
+
       try {
         const currentUser = await getCurrentUser();
-        setUser(currentUser);
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timer);
+          setUser(currentUser);
+          setLoading(false);
+        }
       } catch (err) {
-        console.error('Auth initialization error:', err);
-      } finally {
-        setLoading(false);
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timer);
+          console.error('[GRID] Auth initialization error:', err);
+          setUser(null);
+          setLoading(false);
+        }
       }
     };
 

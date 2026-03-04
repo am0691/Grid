@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Soul, AreaProgress, Area } from '@/types';
 import { useGridStore } from '@/store/gridStore';
 import { useActivityPlanStore } from '@/store/activityPlanStore';
@@ -9,8 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Check, Star, Calendar, MessageSquare, Plus, Trash2, Sparkles, Heart, Grid3X3 } from 'lucide-react';
+import { Check, Star, Calendar, MessageSquare, Plus, Trash2, Sparkles, Heart } from 'lucide-react';
 import { CONVERT_AREAS, DISCIPLE_AREAS, CONVERT_WEEKS, DISCIPLE_MONTHS, getAreaMeta } from '@/types';
 import type { ActivityPlan } from '@/domain/entities/activity-plan';
 
@@ -55,7 +55,7 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
   const [selectedCell, setSelectedCell] = useState<CellData | null>(null);
   const [memoText, setMemoText] = useState('');
   const [newPlanTitle, setNewPlanTitle] = useState('');
-  const [activeTab, setActiveTab] = useState<'grid' | 'pastoral'>('grid');
+  const navigate = useNavigate();
 
   const { toggleCellComplete, setCellMemo } = useGridStore();
   const { plans, fetchPlans, togglePlanComplete, addPlan, deletePlan } = useActivityPlanStore();
@@ -255,26 +255,20 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'grid' | 'pastoral')}>
-            <TabsList>
-              <TabsTrigger value="grid" className="gap-1">
-                <Grid3X3 className="w-4 h-4" />
-                그리드
-              </TabsTrigger>
-              <TabsTrigger value="pastoral" className="gap-1">
-                <Heart className="w-4 h-4" />
-                목양 케어
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <Button
+            variant="outline"
+            className="gap-1"
+            onClick={() => navigate(`/souls/${soul.id}/care`)}
+          >
+            <Heart className="w-4 h-4" />
+            목양 케어
+          </Button>
           <Button variant="outline" onClick={onClose}>닫기</Button>
         </div>
       </div>
 
 
       {/* 그리드 뷰 */}
-      {activeTab === 'grid' && (
-        <>
           {/* 범례 */}
       <div className="flex gap-6 text-sm">
         <div className="flex items-center gap-2">
@@ -384,9 +378,6 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
           </tbody>
         </table>
       </div>
-
-        </>
-      )}
 
       {/* 셀 상세 팝업 (활동 계획 + 추천) */}
       <Dialog open={!!selectedCell} onOpenChange={() => setSelectedCell(null)}>
