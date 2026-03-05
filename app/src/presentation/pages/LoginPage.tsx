@@ -10,6 +10,7 @@ import { AuthLayout } from '../layouts/AuthLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Spinner } from '@/components/ui/spinner';
 import { LogIn, AlertCircle } from 'lucide-react';
@@ -20,6 +21,7 @@ export const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [rememberMe, setRememberMe] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +81,17 @@ export const LoginPage = () => {
               className="h-11"
             />
           </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="rememberMe"
+            checked={rememberMe}
+            onCheckedChange={(checked) => setRememberMe(!!checked)}
+          />
+          <Label htmlFor="rememberMe" className="text-sm font-normal cursor-pointer">
+            로그인 유지
+          </Label>
         </div>
 
         <Button
