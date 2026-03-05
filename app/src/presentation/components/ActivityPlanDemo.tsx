@@ -18,6 +18,7 @@ const mockSoul: Soul = {
   name: '김제자',
   trainingType: 'disciple',
   startDate: '2024-01-01',
+  isActive: true,
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-29T00:00:00Z',
 };

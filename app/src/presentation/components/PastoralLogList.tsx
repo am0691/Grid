@@ -10,7 +10,7 @@ import { usePastoralLogStore } from '@/store/pastoralLogStore';
 import { PastoralLogCard } from './PastoralLogCard';
 import { Button } from '@/components/ui/button';
 import { Plus, BookOpen, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+
 
 interface PastoralLogListProps {
   soulId: string;

@@ -51,12 +51,12 @@ function computeAttentionInfo(soulId: string, soulName: string, logs: ReturnType
     const recentMoods = sorted.slice(0, 3).map(s =>
       s.mood === 'growing' ? 2 : s.mood === 'stable' ? 1 : 0
     );
-    const avgRecent = recentMoods.reduce((a, b) => a + b, 0) / 3;
+    const avgRecent = recentMoods.reduce((a: number, b: number) => a + b, 0) / 3;
     const olderMoods = sorted.slice(3, 6).map(s =>
       s.mood === 'growing' ? 2 : s.mood === 'stable' ? 1 : 0
     );
     if (olderMoods.length > 0) {
-      const avgOlder = olderMoods.reduce((a, b) => a + b, 0) / olderMoods.length;
+      const avgOlder = olderMoods.reduce((a: number, b: number) => a + b, 0) / olderMoods.length;
       if (avgRecent > avgOlder + 0.3) moodTrend = 'improving';
       else if (avgRecent < avgOlder - 0.3) moodTrend = 'declining';
     }

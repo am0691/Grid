@@ -13,7 +13,7 @@ import {
   getCurrentUser,
   onAuthStateChange,
 } from '@/infrastructure/services/auth/auth-service';
-import { supabase } from '@/infrastructure/services/supabase/client';
+
 
 interface AuthProviderProps {
   children: ReactNode;

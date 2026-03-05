@@ -22,6 +22,7 @@ export function ActivityPlanCardExample() {
     name: '홍길동',
     trainingType: 'disciple',
     startDate: '2024-01-01',
+    isActive: true,
     createdAt: '2024-01-01',
     updatedAt: '2024-01-01',
   };
@@ -71,6 +72,7 @@ export function ActivityPlanPanelExample() {
     name: '홍길동',
     trainingType: 'disciple',
     startDate: '2024-01-01',
+    isActive: true,
     createdAt: '2024-01-01',
     updatedAt: '2024-01-01',
   };
@@ -160,6 +162,7 @@ export function AddActivityPlanDialogExample() {
     name: '홍길동',
     trainingType: 'convert',
     startDate: '2024-01-01',
+    isActive: true,
     createdAt: '2024-01-01',
     updatedAt: '2024-01-01',
   };
@@ -191,6 +194,7 @@ export function WeeklyActivityViewExample() {
     name: '홍길동',
     trainingType: 'disciple',
     startDate: '2024-01-01',
+    isActive: true,
     createdAt: '2024-01-01',
     updatedAt: '2024-01-01',
   };

@@ -85,6 +85,7 @@ export const useSoulStore = create<SoulStore>((set, get) => ({
       name: input.name,
       trainingType: input.trainingType,
       startDate: input.startDate,
+      isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

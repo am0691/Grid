@@ -1,5 +1,6 @@
 // GRID 웹서비스 타입 정의
 
+import type { Soul } from '@/domain/entities/soul';
 export type { Soul, SoulProfile } from '@/domain/entities/soul';
 
 export type TrainingType = 'convert' | 'disciple';

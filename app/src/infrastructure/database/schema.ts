@@ -204,7 +204,7 @@ export type PastoralLogUpdate = Partial<Omit<PastoralLog, 'id' | 'soul_id' | 'us
 /**
  * Soul with related user profile
  */
-export interface SoulWithProfile extends Soul {
+export interface SoulWithProfile extends Omit<Soul, 'profile'> {
   profile: Profile;
 }
 
@@ -225,7 +225,7 @@ export interface ActivityPlanWithSoul extends ActivityPlan {
 /**
  * Soul with all related data
  */
-export interface SoulWithDetails extends Soul {
+export interface SoulWithDetails extends Omit<Soul, 'profile'> {
   profile: Profile;
   progress: Progress[];
   activity_plans: ActivityPlan[];

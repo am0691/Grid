@@ -88,6 +88,7 @@ export const useGridStore = create<GridState>()(
           name,
           trainingType,
           startDate,
+          isActive: true,
           createdAt: now,
           updatedAt: now,
           profile

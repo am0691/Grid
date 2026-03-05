@@ -16,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { usePastoralLogStore } from '@/store/pastoralLogStore';
 import { useActivityPlanStore } from '@/store/activityPlanStore';
 import type { CreatePastoralLogDto, PastoralLog } from '@/domain/entities/pastoral-log';

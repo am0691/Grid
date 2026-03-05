@@ -146,6 +146,9 @@ export const createSoul = async (dto: CreateSoulDto): Promise<Soul> => {
     start_date: dto.startDate,
     phone_number: dto.phoneNumber ?? null,
     email: dto.email ?? null,
+    address: null,
+    birth_date: null,
+    is_active: true,
     notes: dto.notes ?? null,
     profile: dto.profile ? (dto.profile as unknown as Record<string, unknown>) : null,
   };

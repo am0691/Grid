@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { groupActivitiesByDate, type UpcomingActivity } from './group-activities-by-date';
+import { groupActivitiesByDate } from './group-activities-by-date';
 import type { ActivityPlan } from '../entities/activity-plan';
 
 function makePlan(overrides: Partial<ActivityPlan> & { scheduledAt: string; soulId: string }): ActivityPlan {
