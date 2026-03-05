@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { CalendarIcon, User, BookOpen } from 'lucide-react';
@@ -47,10 +48,12 @@ export function AddSoulDialog({ open, onOpenChange }: AddSoulDialogProps) {
   const [challenges, setChallenges] = useState('');
 
   const { addSoul } = useSoulStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!name.trim()) return;
+    if (!name.trim() || isSubmitting) return;
 
+    setIsSubmitting(true);
     const dateStr = format(date, 'yyyy-MM-dd');
 
     // Build profile object (only include fields that have values)
@@ -79,12 +82,13 @@ export function AddSoulDialog({ open, onOpenChange }: AddSoulDialogProps) {
         profile: Object.keys(profile).length > 0 ? profile : undefined,
       });
 
-      // Reset form
       resetForm();
       onOpenChange(false);
     } catch (error) {
       console.error('Failed to add soul:', error);
-      // TODO: Show error toast to user
+      toast.error('영혼 추가에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -388,9 +392,9 @@ export function AddSoulDialog({ open, onOpenChange }: AddSoulDialogProps) {
           <Button
             className="flex-1"
             onClick={handleSubmit}
-            disabled={!name.trim()}
+            disabled={!name.trim() || isSubmitting}
           >
-            추가
+            {isSubmitting ? '추가 중...' : '추가'}
           </Button>
         </div>
       </DialogContent>

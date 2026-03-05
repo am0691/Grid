@@ -327,7 +327,7 @@ export const initializeAllProgress = async (
   const areas = trainingType === 'convert' ? CONVERT_AREAS : DISCIPLE_AREAS;
   const maxWeeks = trainingType === 'convert' ? 13 : 12;
 
-  for (const area of areas) {
-    await initializeAreaProgress(soulId, area.id as Area, maxWeeks);
-  }
+  await Promise.all(
+    areas.map(area => initializeAreaProgress(soulId, area.id as Area, maxWeeks))
+  );
 };
