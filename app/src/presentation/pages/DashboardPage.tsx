@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Users, BookOpen, GraduationCap, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { UpcomingActivitiesSection } from '@/presentation/components/UpcomingActivitiesSection';
+import { useActivityPlanStore } from '@/store/activityPlanStore';
 import type { Soul } from '@/types';
 import { CONVERT_AREAS, DISCIPLE_AREAS } from '@/types';
 
@@ -20,18 +22,20 @@ export function DashboardPage() {
 
   const { souls, fetchSouls, isLoading: soulsLoading } = useSoulStore();
   const { fetchProgress, getSoulProgress, getOverallProgress } = useProgressStore();
+  const { fetchPlans } = useActivityPlanStore();
 
   // Fetch souls on mount
   useEffect(() => {
     fetchSouls();
   }, [fetchSouls]);
 
-  // Fetch progress for each soul
+  // Fetch progress and plans for each soul
   useEffect(() => {
     souls.forEach(soul => {
       fetchProgress(soul.id);
+      fetchPlans(soul.id);
     });
-  }, [souls, fetchProgress]);
+  }, [souls, fetchProgress, fetchPlans]);
 
   // 필터링된 영혼 목록
   const filteredSouls = souls.filter(soul => {
@@ -175,6 +179,9 @@ export function DashboardPage() {
                 </div>
               </div>
             </div>
+
+            {/* 다가오는 활동 */}
+            <UpcomingActivitiesSection souls={souls} />
 
             {/* 주의가 필요한 영역 */}
             {alerts.length > 0 && (

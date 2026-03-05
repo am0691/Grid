@@ -4,15 +4,19 @@ import type { Soul, AreaProgress, Area } from '@/types';
 import { useGridStore } from '@/store/gridStore';
 import { useActivityPlanStore } from '@/store/activityPlanStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Check, Star, Calendar, MessageSquare, Plus, Trash2, Sparkles, Heart } from 'lucide-react';
+import { Check, Star, Calendar, MessageSquare, Plus, Trash2, Sparkles, Heart, CalendarIcon } from 'lucide-react';
 import { CONVERT_AREAS, DISCIPLE_AREAS, CONVERT_WEEKS, DISCIPLE_MONTHS, getAreaMeta } from '@/types';
 import type { ActivityPlan } from '@/domain/entities/activity-plan';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale/ko';
 
 
 interface GridViewProps {
@@ -58,7 +62,9 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
   const navigate = useNavigate();
 
   const { toggleCellComplete, setCellMemo } = useGridStore();
-  const { plans, fetchPlans, togglePlanComplete, addPlan, deletePlan } = useActivityPlanStore();
+  const { plans, fetchPlans, togglePlanComplete, addPlan, updatePlan, deletePlan } = useActivityPlanStore();
+  const [editingDatePlanId, setEditingDatePlanId] = useState<string | null>(null);
+  const [planDate, setPlanDate] = useState<Date>(new Date());
 
   // 활동 계획 로드
   useEffect(() => {
@@ -179,11 +185,12 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
         soulId: soul.id,
         title: newPlanTitle.trim(),
         type: 'meeting',
-        scheduledAt: new Date().toISOString(),
+        scheduledAt: planDate.toISOString(),
         areaId: selectedCell.areaId,
         week: selectedCell.week,
       });
       setNewPlanTitle('');
+      setPlanDate(new Date());
     } catch (error) {
       console.error('활동 계획 추가 실패:', error);
       alert('활동 계획 추가에 실패했습니다. 다시 시도해주세요.');
@@ -197,7 +204,7 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
         soulId: soul.id,
         title,
         type: 'meeting',
-        scheduledAt: new Date().toISOString(),
+        scheduledAt: planDate.toISOString(),
         areaId: selectedCell.areaId,
         week: selectedCell.week,
       });
@@ -270,7 +277,7 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
 
       {/* 그리드 뷰 */}
           {/* 범례 */}
-      <div className="flex gap-6 text-sm">
+      <div className="flex flex-wrap gap-2 md:gap-6 text-sm">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded bg-green-100 border border-green-600 flex items-center justify-center">
             <Check className="w-4 h-4 text-green-600" />
@@ -300,7 +307,7 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
               {areas.map(area => (
                 <th
                   key={area.id}
-                  className="p-3 text-center font-medium border-b-2 min-w-[120px]"
+                  className="p-3 text-center font-medium border-b-2 min-w-[80px] md:min-w-[120px]"
                   style={{ borderColor: area.color, color: area.color }}
                 >
                   <div className="text-sm">{area.name}</div>
@@ -350,11 +357,14 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
                               {cellActivities.slice(0, 2).map((activity) => (
                                 <div
                                   key={activity.id}
-                                  className={`truncate ${
+                                  className={`${
                                     activity.status === 'completed' ? 'line-through opacity-60' : ''
                                   }`}
                                 >
-                                  • {activity.title}
+                                  <div className="truncate">• {activity.title}</div>
+                                  <div className="text-[10px] opacity-60 ml-2.5">
+                                    {format(new Date(activity.scheduledAt), 'M/d', { locale: ko })}
+                                  </div>
                                 </div>
                               ))}
                               {cellActivities.length > 2 && (
@@ -475,6 +485,37 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
                           }`}>
                             {activity.title}
                           </span>
+                          <Popover
+                            open={editingDatePlanId === activity.id}
+                            onOpenChange={(open) => {
+                              if (!open) setEditingDatePlanId(null);
+                            }}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground gap-1"
+                                onClick={() => setEditingDatePlanId(activity.id)}
+                              >
+                                <CalendarIcon className="w-3 h-3" />
+                                {format(new Date(activity.scheduledAt), 'M/d', { locale: ko })}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="end">
+                              <CalendarPicker
+                                mode="single"
+                                selected={new Date(activity.scheduledAt)}
+                                onSelect={(date) => {
+                                  if (date) {
+                                    updatePlan(activity.id, { scheduledAt: date.toISOString() });
+                                    setEditingDatePlanId(null);
+                                  }
+                                }}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -494,24 +535,48 @@ export function GridView({ soul, progress, onClose }: GridViewProps) {
                 )}
 
                 {/* 새 활동 입력 */}
-                <div className="flex gap-2">
-                  <Input
-                    value={newPlanTitle}
-                    onChange={(e) => setNewPlanTitle(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="새 활동 계획 입력..."
-                    className="flex-1"
-                  />
-                  <Button
-                    onClick={handleAddPlan}
-                    disabled={!newPlanTitle.trim()}
-                    style={{
-                      backgroundColor: getAreaMeta(selectedCell.areaId, soul.trainingType).color,
-                      borderColor: getAreaMeta(selectedCell.areaId, soul.trainingType).color
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                <div className="space-y-2">
+                  <div className="flex flex-wrap gap-2">
+                    <Input
+                      value={newPlanTitle}
+                      onChange={(e) => setNewPlanTitle(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="새 활동 계획 입력..."
+                      className="flex-1 min-w-0"
+                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-9 px-2 gap-1 text-xs shrink-0"
+                        >
+                          <CalendarIcon className="w-3.5 h-3.5" />
+                          {format(planDate, 'M/d', { locale: ko })}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="end">
+                        <CalendarPicker
+                          mode="single"
+                          selected={planDate}
+                          onSelect={(date) => {
+                            if (date) setPlanDate(date);
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <Button
+                      onClick={handleAddPlan}
+                      disabled={!newPlanTitle.trim()}
+                      style={{
+                        backgroundColor: getAreaMeta(selectedCell.areaId, soul.trainingType).color,
+                        borderColor: getAreaMeta(selectedCell.areaId, soul.trainingType).color
+                      }}
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
 

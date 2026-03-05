@@ -34,10 +34,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import type { Soul } from '@/types';
 import type { Area } from '@/domain/value-objects/area';
 import { getAreaMeta, CONVERT_WEEKS, DISCIPLE_MONTHS } from '@/types';
-import { PlusCircle, Loader2 } from 'lucide-react';
+import { PlusCircle, Loader2, CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale/ko';
+import { cn } from '@/lib/utils';
 
 const activityPlanSchema = z.object({
   title: z
@@ -46,6 +51,7 @@ const activityPlanSchema = z.object({
     .max(100, '제목은 100자 이내로 입력해주세요'),
   areaId: z.string().min(1, '영역을 선택해주세요'),
   week: z.number().min(1, '주차/월차를 선택해주세요'),
+  scheduledAt: z.date(),
   description: z.string().optional(),
 });
 
@@ -99,6 +105,7 @@ export function AddActivityPlanDialog({
       title: '',
       areaId: defaultAreaId || '',
       week: defaultWeek || 1,
+      scheduledAt: new Date(),
       description: '',
     },
   });
@@ -230,6 +237,45 @@ export function AddActivityPlanDialog({
                     />
                   </FormControl>
                   <FormDescription>활동의 제목을 입력하세요</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* 날짜 선택 */}
+            <FormField
+              control={form.control}
+              name="scheduledAt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>예정 날짜</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            'w-full justify-start text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value
+                            ? format(field.value, 'yyyy년 MM월 dd일', { locale: ko })
+                            : '날짜 선택'}
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(date) => date && field.onChange(date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>활동 예정 날짜를 선택하세요</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
