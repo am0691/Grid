@@ -26,20 +26,20 @@ export const AuthLayout = ({ children, title, description }: AuthLayoutProps) =>
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-glow-indigo mb-4">
             <span className="text-2xl font-extrabold text-white">G</span>
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tighter text-white mb-1">
+          <h1 className="text-4xl font-extrabold tracking-tighter text-foreground mb-1">
             GRID
           </h1>
-          <p className="text-sm text-white/50 font-medium">
+          <p className="text-sm text-foreground/70 font-medium">
             영적 성장 추적 시스템
           </p>
         </div>
 
         {/* Card with glassmorphism */}
-        <Card className="border border-white/10 backdrop-blur-xl bg-white/[0.07] shadow-modal">
+        <Card className="border border-white/10 backdrop-blur-xl bg-white/[0.12] shadow-modal">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold tracking-tight text-white">{title}</CardTitle>
+            <CardTitle className="text-2xl font-bold tracking-tight text-foreground">{title}</CardTitle>
             {description && (
-              <CardDescription className="text-base text-white/50">{description}</CardDescription>
+              <CardDescription className="text-base text-foreground/60">{description}</CardDescription>
             )}
           </CardHeader>
           <CardContent>{children}</CardContent>

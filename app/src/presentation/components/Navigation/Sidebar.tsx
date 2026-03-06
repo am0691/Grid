@@ -53,7 +53,7 @@ export function Sidebar({ className }: SidebarProps) {
         <div className="flex items-center gap-2">
           <span className="text-lg font-bold text-white tracking-tight">GRID</span>
           {souls.length > 0 && (
-            <span className="text-[11px] font-medium text-sidebar-foreground/60 bg-white/[0.06] px-1.5 py-0.5 rounded-md">
+            <span className="text-[11px] font-medium text-sidebar-foreground/80 bg-white/[0.06] px-1.5 py-0.5 rounded-md">
               {souls.length}
             </span>
           )}
@@ -74,7 +74,7 @@ export function Sidebar({ className }: SidebarProps) {
                   'group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative',
                   isActive
                     ? 'bg-white/[0.08] text-white'
-                    : 'text-sidebar-foreground/70 hover:text-white hover:bg-white/[0.04]'
+                    : 'text-sidebar-foreground/90 hover:text-white hover:bg-white/[0.04]'
                 )
               }
             >
@@ -86,7 +86,7 @@ export function Sidebar({ className }: SidebarProps) {
                   )}
                   <Icon className={cn(
                     'w-[18px] h-[18px] transition-colors',
-                    isActive ? 'text-primary' : 'text-sidebar-foreground/50 group-hover:text-sidebar-foreground/80'
+                    isActive ? 'text-primary' : 'text-sidebar-foreground/70 group-hover:text-sidebar-foreground/90'
                   )} />
                   <span>{item.label}</span>
                 </>
@@ -98,7 +98,7 @@ export function Sidebar({ className }: SidebarProps) {
 
       {/* Bottom section */}
       <div className="p-3 border-t border-white/[0.06]">
-        <div className="px-3 py-2 text-[11px] text-sidebar-foreground/40 font-medium">
+        <div className="px-3 py-2 text-[11px] text-sidebar-foreground/60 font-medium">
           GRID v1.0
         </div>
       </div>

@@ -55,7 +55,7 @@ export const LoginPage = () => {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">이메일</Label>
+            <Label htmlFor="email" className="text-foreground">이메일</Label>
             <Input
               id="email"
               type="email"
@@ -69,7 +69,7 @@ export const LoginPage = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">비밀번호</Label>
+            <Label htmlFor="password" className="text-foreground">비밀번호</Label>
             <Input
               id="password"
               type="password"
@@ -89,7 +89,7 @@ export const LoginPage = () => {
             checked={rememberMe}
             onCheckedChange={(checked) => setRememberMe(!!checked)}
           />
-          <Label htmlFor="rememberMe" className="text-sm font-normal cursor-pointer">
+          <Label htmlFor="rememberMe" className="text-sm font-normal cursor-pointer text-foreground/80">
             로그인 유지
           </Label>
         </div>
@@ -108,7 +108,7 @@ export const LoginPage = () => {
         </Button>
 
         <div className="text-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-foreground/60">
             계정이 없으신가요?{' '}
             <Link
               to="/signup"
