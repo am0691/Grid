@@ -110,7 +110,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       setError(null);
       setLoading(true);
-      const result = await signInWithEmail({ email, password });
+
+      // 8초 타임아웃: Supabase hang 방지
+      const result = await Promise.race([
+        signInWithEmail({ email, password }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('로그인 요청 시간이 초과되었습니다. 다시 시도해주세요.')), 8000)
+        ),
+      ]);
 
       if (!result.success) {
         setError(result.error?.message || '로그인에 실패했습니다.');
