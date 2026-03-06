@@ -1,7 +1,6 @@
 import type { Soul, AreaProgress } from '@/types';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { User, Calendar, TrendingUp, AlertTriangle } from 'lucide-react';
 import { CONVERT_AREAS, DISCIPLE_AREAS, CONVERT_WEEKS, DISCIPLE_MONTHS } from '@/types';
 

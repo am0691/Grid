@@ -72,7 +72,7 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
     }
   };
 
-  const getCellClasses = (status: 'completed' | 'current' | 'future', color: string) => {
+  const getCellClasses = (status: 'completed' | 'current' | 'future', _color: string) => {
     const base = 'w-full min-h-[90px] max-h-[120px] rounded-lg border-2 flex flex-col items-start justify-start p-2 transition-all hover:scale-[1.02] relative text-left';
 
     switch (status) {
