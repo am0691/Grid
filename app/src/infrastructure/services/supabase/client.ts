@@ -23,7 +23,8 @@ export const supabase: SupabaseClient = createSupabaseClient(supabaseUrl, supaba
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: false,
+    flowType: 'implicit',
   },
 });
 
