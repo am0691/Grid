@@ -35,9 +35,9 @@ export function MainLayout() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 dark:from-slate-950 dark:via-blue-950/30 dark:to-indigo-950/50">
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Top Bar */}
-      <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between h-14 px-4">
           {/* Mobile Menu Button */}
           <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
@@ -58,12 +58,12 @@ export function MainLayout() {
           <div className="flex-1 max-w-md mx-4">
             <Button
               variant="outline"
-              className="w-full justify-start text-muted-foreground"
+              className="w-full justify-start text-muted-foreground border-border/60 hover:border-primary/30 hover:bg-primary/5"
               onClick={() => setIsSearchOpen(true)}
             >
               <Search className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">검색...</span>
-              <kbd className="ml-auto hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+              <kbd className="ml-auto hidden sm:inline-flex h-5 select-none items-center gap-1 rounded-sm border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
                 <span className="text-xs">⌘</span>K
               </kbd>
             </Button>
@@ -81,7 +81,7 @@ export function MainLayout() {
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto">
-          <div className="container mx-auto p-4 md:p-6 pb-20 md:pb-6">
+          <div className="container mx-auto p-4 md:p-6 pb-20 md:pb-6 animate-fade-in">
             <Outlet />
           </div>
         </main>

@@ -157,11 +157,11 @@ export function CrisisAlertPanel({ soulId, soulName = '', showAll = false }: Cri
   const getLevelIcon = (level: CrisisLevel) => {
     switch (level) {
       case 'critical':
-        return <AlertTriangle className="h-5 w-5 text-red-500" />;
+        return <AlertTriangle className="h-5 w-5 text-danger" />;
       case 'warning':
-        return <AlertTriangle className="h-5 w-5 text-orange-500" />;
+        return <AlertTriangle className="h-5 w-5 text-warning" />;
       default:
-        return <Clock className="h-5 w-5 text-yellow-500" />;
+        return <Clock className="h-5 w-5 text-warning" />;
     }
   };
 
@@ -172,7 +172,7 @@ export function CrisisAlertPanel({ soulId, soulName = '', showAll = false }: Cri
       case 'acknowledged':
         return <Badge variant="secondary">확인됨</Badge>;
       case 'resolved':
-        return <Badge className="bg-green-500">해결됨</Badge>;
+        return <Badge className="bg-growth">해결됨</Badge>;
       default:
         return <Badge variant="outline">무시됨</Badge>;
     }
@@ -183,7 +183,7 @@ export function CrisisAlertPanel({ soulId, soulName = '', showAll = false }: Cri
       <Card className="border-dashed">
         <CardContent className="py-6">
           <div className="text-center text-muted-foreground">
-            <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+            <CheckCircle className="h-8 w-8 mx-auto mb-2 text-growth" />
             <p className="text-sm">활성 위기 알림이 없습니다</p>
           </div>
         </CardContent>
@@ -193,10 +193,10 @@ export function CrisisAlertPanel({ soulId, soulName = '', showAll = false }: Cri
 
   return (
     <>
-      <Card className="border-2 border-red-200">
+      <Card className="border-2 border-danger/20">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-lg text-red-700">
+            <CardTitle className="flex items-center gap-2 text-lg text-danger">
               <AlertTriangle className="h-5 w-5" />
               위기 알림
               <Badge variant="destructive">{visibleAlerts.length}</Badge>
@@ -250,13 +250,13 @@ export function CrisisAlertPanel({ soulId, soulName = '', showAll = false }: Cri
                         {alert.recommendedActions.map((action, i) => (
                           <li key={i} className="flex items-center gap-1">
                             {i === 0 && alert.level === 'critical' && (
-                              <Phone className="h-3 w-3 text-red-500" />
+                              <Phone className="h-3 w-3 text-danger" />
                             )}
                             {i === 0 && alert.level === 'warning' && (
-                              <Users className="h-3 w-3 text-orange-500" />
+                              <Users className="h-3 w-3 text-warning" />
                             )}
                             {i === 0 && alert.level === 'attention' && (
-                              <MessageCircle className="h-3 w-3 text-yellow-600" />
+                              <MessageCircle className="h-3 w-3 text-warning" />
                             )}
                             <span>{action}</span>
                           </li>
@@ -278,7 +278,7 @@ export function CrisisAlertPanel({ soulId, soulName = '', showAll = false }: Cri
                       <Button
                         size="sm"
                         variant="default"
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-growth hover:bg-growth/90"
                         onClick={() => setSelectedAlert(alert)}
                       >
                         <CheckCircle className="h-4 w-4 mr-1" />
@@ -334,7 +334,7 @@ export function CrisisAlertPanel({ soulId, soulName = '', showAll = false }: Cri
             <Button variant="outline" onClick={() => setSelectedAlert(null)}>
               취소
             </Button>
-            <Button onClick={handleResolve} className="bg-green-600 hover:bg-green-700">
+            <Button onClick={handleResolve} className="bg-growth hover:bg-growth/90">
               해결 완료
             </Button>
           </DialogFooter>

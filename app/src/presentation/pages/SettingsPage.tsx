@@ -97,7 +97,7 @@ export const SettingsPage = () => {
       </div>
 
       {saveSuccess && (
-        <Alert className="bg-green-50 border-green-200 text-green-800">
+        <Alert className="bg-growth-light border-growth/20 text-growth">
           <CheckCircle2 className="h-4 w-4" />
           <AlertDescription>설정이 성공적으로 저장되었습니다.</AlertDescription>
         </Alert>

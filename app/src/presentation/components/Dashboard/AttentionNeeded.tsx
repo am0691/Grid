@@ -96,11 +96,11 @@ export function AttentionNeeded({ onNavigateToSoul }: AttentionNeededProps) {
   };
 
   return (
-    <Card className="border-2 border-orange-200">
+    <Card className="border-2 border-warning/20">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <AlertTriangle className="h-5 w-5 text-orange-600" />
+            <AlertTriangle className="h-5 w-5 text-warning" />
             관심 필요
             {soulsNeedingAttention.length > 0 && (
               <Badge variant="secondary" className="ml-2">
@@ -118,7 +118,7 @@ export function AttentionNeeded({ onNavigateToSoul }: AttentionNeededProps) {
               {soulsNeedingAttention.map(({ soulId, soulName, currentMood, moodTrend, consecutiveStrugglingCount }) => (
                 <div
                   key={soulId}
-                  className="p-4 rounded-lg border-2 border-orange-200 bg-orange-50 hover:bg-orange-100 transition-colors cursor-pointer"
+                  className="p-4 rounded-lg border-2 border-warning/20 bg-warning-light hover:bg-warning/20 transition-colors cursor-pointer"
                   onClick={() => handleSoulClick(soulId)}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -131,19 +131,19 @@ export function AttentionNeeded({ onNavigateToSoul }: AttentionNeededProps) {
                       {/* Mood Indicator */}
                       {currentMood && (
                         <div className="flex items-center gap-2 mb-2">
-                          <Thermometer className="h-4 w-4 text-orange-600" />
+                          <Thermometer className="h-4 w-4 text-warning" />
                           <span className="text-sm">
                             {MOOD_LABELS[currentMood]}
                           </span>
                           {moodTrend === 'declining' && (
-                            <TrendingDown className="h-3 w-3 text-red-500" />
+                            <TrendingDown className="h-3 w-3 text-danger" />
                           )}
                         </div>
                       )}
 
                       {/* Consecutive struggling */}
                       {consecutiveStrugglingCount > 0 && (
-                        <p className="text-xs text-orange-800">
+                        <p className="text-xs text-warning">
                           {consecutiveStrugglingCount}회 연속 위기 상태
                         </p>
                       )}
@@ -171,7 +171,7 @@ export function AttentionNeeded({ onNavigateToSoul }: AttentionNeededProps) {
                       </div>
                     </div>
 
-                    <ArrowRight className="h-5 w-5 text-orange-600 flex-shrink-0" />
+                    <ArrowRight className="h-5 w-5 text-warning flex-shrink-0" />
                   </div>
                 </div>
               ))}

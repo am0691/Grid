@@ -116,9 +116,9 @@ const MOOD_LABELS: Record<string, string> = {
 };
 
 const MOOD_COLORS: Record<string, string> = {
-  growing: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  stable: 'bg-amber-100 text-amber-700 border-amber-200',
-  struggling: 'bg-red-100 text-red-700 border-red-200',
+  growing: 'bg-growth-light text-growth border-growth/20',
+  stable: 'bg-warning-light text-warning border-warning/20',
+  struggling: 'bg-danger-light text-danger border-danger/20',
 };
 
 // ─── 날짜 포맷 ────────────────────────────────────────────
@@ -184,7 +184,7 @@ function LogTimelineItem({ log }: { log: PastoralLog }) {
   return (
     <div
       className={`p-3 rounded-lg border bg-background hover:bg-muted/30 transition-colors ${
-        log.hasBreakthrough ? 'border-yellow-300 ring-1 ring-yellow-100' : ''
+        log.hasBreakthrough ? 'border-warning/30 ring-1 ring-warning/10' : ''
       }`}
     >
       <div className="flex items-start justify-between gap-2">
@@ -196,11 +196,11 @@ function LogTimelineItem({ log }: { log: PastoralLog }) {
             <p className="font-medium text-sm flex items-center gap-1">
               목양 일지
               {log.hasBreakthrough && (
-                <Sparkles className="h-3.5 w-3.5 text-yellow-500 shrink-0" />
+                <Sparkles className="h-3.5 w-3.5 text-warning shrink-0" />
               )}
             </p>
             {log.breakthroughTitle && log.hasBreakthrough && (
-              <p className="text-xs text-yellow-600 font-medium truncate">
+              <p className="text-xs text-warning font-medium truncate">
                 {log.breakthroughTitle}
               </p>
             )}
@@ -228,7 +228,7 @@ function LogTimelineItem({ log }: { log: PastoralLog }) {
               <Star
                 key={i}
                 className={`h-3 w-3 ${
-                  i < log.rating! ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground/30'
+                  i < log.rating! ? 'text-warning fill-warning' : 'text-muted-foreground/30'
                 }`}
               />
             ))}
@@ -394,7 +394,7 @@ export function ActivityTimeline({ soulId }: ActivityTimelineProps) {
                             className={`absolute -left-[18px] top-3.5 w-3 h-3 rounded-full border-2 border-background ${
                               item.kind === 'log'
                                 ? (item.data as PastoralLog).hasBreakthrough
-                                  ? 'bg-yellow-400'
+                                  ? 'bg-warning'
                                   : 'bg-primary'
                                 : 'bg-muted-foreground'
                             }`}

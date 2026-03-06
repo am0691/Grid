@@ -27,19 +27,17 @@ export function SoulCard({
   const areas = soul.trainingType === 'convert' ? CONVERT_AREAS : DISCIPLE_AREAS;
   const maxWeek = soul.trainingType === 'convert' ? CONVERT_WEEKS : DISCIPLE_MONTHS;
 
-  // Temperature mood colors
   const getTempColor = () => {
     switch (temperatureMood) {
-      case 'growing': return '#22c55e'; // green
-      case 'stable': return '#f59e0b'; // amber
-      case 'struggling': return '#ef4444'; // red
+      case 'growing': return 'hsl(var(--growth))';
+      case 'stable': return 'hsl(var(--warning))';
+      case 'struggling': return 'hsl(var(--danger))';
       default: return null;
     }
   };
 
   const tempColor = getTempColor();
-  
-  // 영역별 진도 요약
+
   const getAreaSummary = () => {
     return progress.map(p => {
       const areaMeta = areas.find(a => a.id === p.areaId);
@@ -55,29 +53,28 @@ export function SoulCard({
 
   const areaSummary = getAreaSummary();
   const currentWeekStr = soul.trainingType === 'convert' ? '주차' : '개월차';
-  
-  // 평균 진도 계산
-  const avgWeek = progress.length > 0 
+
+  const avgWeek = progress.length > 0
     ? Math.round(progress.reduce((sum, p) => sum + p.currentWeek, 0) / progress.length)
     : 1;
 
   return (
     <Card
-      className={`cursor-pointer hover:shadow-lg transition-all duration-200 border-2 ${
+      className={`cursor-pointer card-hover border transition-all duration-200 ${
         needsAttention
-          ? 'border-orange-400 bg-orange-50/30'
-          : 'hover:border-primary/50'
+          ? 'border-warning/60 bg-warning-light'
+          : 'border-border/50 hover:border-primary/30'
       }`}
       onClick={onClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center relative">
+            <div className="w-10 h-10 rounded-full bg-primary/8 flex items-center justify-center relative">
               <User className="w-5 h-5 text-primary" />
               {tempColor && (
                 <div
-                  className="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
+                  className="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-card"
                   style={{ backgroundColor: tempColor }}
                   title={`영적 상태: ${temperatureMood === 'growing' ? '성장' : temperatureMood === 'stable' ? '안정' : '어려움'}`}
                 />
@@ -87,7 +84,7 @@ export function SoulCard({
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-lg">{soul.name}</h3>
                 {hasCrisisAlert && (
-                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-red-500" title="위기 경보">
+                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-danger" title="위기 경보">
                     <AlertTriangle className="w-3 h-3 text-white" />
                   </div>
                 )}
@@ -99,46 +96,51 @@ export function SoulCard({
             </div>
           </div>
           <Badge
-            variant={soul.trainingType === 'convert' ? 'default' : 'secondary'}
+            variant={soul.trainingType === 'convert' ? 'default' : 'violet'}
             className="text-xs"
           >
             {soul.trainingType === 'convert' ? 'Convert' : 'Disciple'}
           </Badge>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
-        {/* 진도율 */}
+        {/* Progress */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               전체 진도
             </span>
-            <span className="font-medium">{overallProgress}%</span>
+            <span className="font-semibold">{overallProgress}%</span>
           </div>
-          <Progress value={overallProgress} className="h-2" />
+          <div className="h-2 rounded-full bg-secondary overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500 ease-out"
+              style={{ width: `${overallProgress}%` }}
+            />
+          </div>
         </div>
 
-        {/* 평균 진도 */}
+        {/* Average progress */}
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">평균 진행</span>
           <span className="font-medium">{avgWeek}{currentWeekStr}</span>
         </div>
 
-        {/* 영역별 색상 요약 */}
+        {/* Area color summary */}
         <div className="space-y-2">
           <span className="text-xs text-muted-foreground">영역별 진도</span>
-          <div className="flex gap-1 flex-wrap">
+          <div className="flex gap-1.5 flex-wrap">
             {areaSummary.map((area, idx) => (
               <div
                 key={idx}
-                className="w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-medium text-white relative overflow-hidden"
+                className="w-7 h-7 rounded-md flex items-center justify-center text-[10px] font-semibold text-white relative overflow-hidden transition-transform hover:scale-110"
                 style={{ backgroundColor: area.color }}
                 title={`${areas[idx]?.name}: ${area.completed}/${area.total}`}
               >
                 {area.isCurrent && (
-                  <div className="absolute inset-0 border-2 border-white rounded-md" />
+                  <div className="absolute inset-0 border-2 border-white/60 rounded-md" />
                 )}
                 {area.completed > 0 ? area.completed : '-'}
               </div>

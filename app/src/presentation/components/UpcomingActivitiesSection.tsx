@@ -49,7 +49,7 @@ export function UpcomingActivitiesSection({ souls }: UpcomingActivitiesSectionPr
   return (
     <div className="space-y-3">
       <h2 className="text-lg font-semibold flex items-center gap-2">
-        <CalendarDays className="w-5 h-5 text-blue-500" />
+        <CalendarDays className="w-5 h-5 text-primary" />
         다가오는 활동
       </h2>
       <div className="bg-white rounded-xl p-3 md:p-5 shadow-sm border space-y-3 md:space-y-5">

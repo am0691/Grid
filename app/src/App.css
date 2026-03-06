@@ -1,42 +1,108 @@
+/* ================================================
+   GRID Global Animation & Utility Classes
+   ================================================ */
+
+/* Page content wrapper — no max-width constraint */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100svh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* Card hover lift effect */
+.card-hover {
+  transition: transform 200ms ease, box-shadow 200ms ease;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
 }
 
-@keyframes logo-spin {
+/* Stagger animation children */
+.stagger-children > * {
+  opacity: 0;
+  animation: fade-in-up 0.4s ease-out forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 350ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(10) { animation-delay: 450ms; }
+.stagger-children > *:nth-child(n+11) { animation-delay: 500ms; }
+
+@keyframes fade-in-up {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Press feedback for interactive elements */
+.press-feedback:active {
+  transform: scale(0.98);
 }
 
-.card {
-  padding: 2em;
+/* Gradient text utility */
+.text-gradient-primary {
+  background: linear-gradient(135deg, hsl(231 66% 55%), hsl(263 70% 50%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.read-the-docs {
-  color: #888;
+/* Glassmorphism */
+.glass {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: hsl(var(--background) / 0.8);
+}
+
+/* Sidebar dark gradient */
+.sidebar-gradient {
+  background: linear-gradient(
+    180deg,
+    hsl(231 45% 15%) 0%,
+    hsl(231 50% 12%) 100%
+  );
+}
+
+/* Grid cell dot pattern for future cells */
+.cell-future-pattern {
+  background-image: radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* Auth background animated gradient */
+.auth-bg {
+  background: linear-gradient(135deg, hsl(231 45% 15%) 0%, hsl(263 40% 18%) 50%, hsl(231 50% 12%) 100%);
+  background-size: 200% 200%;
+  animation: auth-gradient-shift 8s ease infinite;
+}
+
+@keyframes auth-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.3);
 }

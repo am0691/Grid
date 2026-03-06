@@ -171,7 +171,7 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                         <span className="font-medium">{result.title}</span>
                         <StatusIcon
                           className={`h-3 w-3 ${
-                            isCompleted ? 'text-green-600' : 'text-muted-foreground'
+                            isCompleted ? 'text-growth' : 'text-muted-foreground'
                           }`}
                         />
                       </div>

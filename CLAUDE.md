@@ -25,6 +25,31 @@
 - Project ref: `aryeyzovzpysnedhvlih`
 - Auth: email/password, `mailer_autoconfirm: true`
 
+## Design System — Color Token Rules
+
+### Required: Use semantic tokens for all presentation colors
+- **Green (success/growth):** `text-growth`, `bg-growth`, `bg-growth-light`
+- **Amber/Yellow (warning/stable):** `text-warning`, `bg-warning`, `bg-warning-light`
+- **Red (danger/error):** `text-danger`, `bg-danger`, `bg-danger-light`, `text-destructive`, `bg-destructive`
+- **Purple/Violet (accent/breakthrough):** `text-accent`, `bg-accent`, `bg-violet-light`
+- **Blue (primary/info):** `text-primary`, `bg-primary`, `bg-primary/10`
+- **Gray (muted):** `text-muted-foreground`, `bg-muted`, `bg-secondary`
+
+### Prohibited in presentation layer
+- Hardcoded Tailwind colors: `bg-green-*`, `text-blue-*`, `border-red-*`, etc.
+- Hardcoded hex in className or inline style (except data-driven area colors from domain layer)
+- Exception: `types/index.ts`, `domain/` hex colors are data definitions, not presentation
+
+### Where hex colors are OK
+- Domain layer data definitions (`area.ts`, `pastoral-log.ts`, `crisis-detection.service.ts`)
+- Recharts `stroke`/`fill` attributes (requires raw values)
+- Inline `style` for data-driven area colors from backend
+
+### Reference
+- Full design system: `.interface-design/system.md`
+- CSS variables: `app/src/index.css`
+- Tailwind tokens: `app/tailwind.config.js`
+
 ## Known Issues
 - Supabase JS 클라이언트가 브라우저에서 hang되는 현상 발생 (curl은 정상)
 - 원인 조사 중: stale localStorage 세션 토큰 또는 클라이언트 초기화 문제 의심

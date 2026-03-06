@@ -139,8 +139,8 @@ export function ThisWeekActivityPanel({
       <CardContent className="pt-0">
         {/* 평가 필요 알림 */}
         {needsEvaluation.length > 0 && (
-          <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
-            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+          <div className="mb-4 p-3 rounded-lg bg-warning-light border border-warning/20 dark:bg-warning/10 dark:border-warning/20">
+            <div className="flex items-center gap-2 text-warning">
               <Target className="h-4 w-4" />
               <span className="text-sm font-medium">
                 {needsEvaluation.length}개 활동의 평가가 필요합니다
@@ -216,7 +216,7 @@ export function ThisWeekActivityPanel({
                         className={`
                           flex items-center gap-2 p-2 rounded-md transition-all
                           ${plan.status === 'completed'
-                            ? 'bg-green-50 dark:bg-green-900/20'
+                            ? 'bg-growth-light dark:bg-growth/10'
                             : 'hover:bg-muted/50'
                           }
                         `}
@@ -239,7 +239,7 @@ export function ThisWeekActivityPanel({
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-6 px-2 text-xs text-amber-600 hover:text-amber-700"
+                            className="h-6 px-2 text-xs text-warning hover:text-warning/80"
                             onClick={() => onEvaluate(plan)}
                           >
                             평가
@@ -257,16 +257,16 @@ export function ThisWeekActivityPanel({
                     {areaRecommendations.slice(0, 2).map((rec) => (
                       <div
                         key={rec.id}
-                        className="flex items-center gap-2 p-2 rounded-md bg-purple-50/50 dark:bg-purple-900/10 border border-dashed border-purple-200 dark:border-purple-800"
+                        className="flex items-center gap-2 p-2 rounded-md bg-violet-light dark:bg-accent/10 border border-dashed border-accent/20 dark:border-accent/20"
                       >
-                        <Sparkles className="h-3 w-3 text-purple-500" />
+                        <Sparkles className="h-3 w-3 text-accent" />
                         <span className="flex-1 text-sm text-muted-foreground">
                           {rec.title}
                         </span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 px-2 text-xs text-purple-600 hover:text-purple-700"
+                          className="h-6 px-2 text-xs text-accent hover:text-accent/80"
                           onClick={() => onAddPlan(area.id, currentWeek)}
                         >
                           <Plus className="h-3 w-3 mr-1" />

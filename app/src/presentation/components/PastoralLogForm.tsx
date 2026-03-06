@@ -242,8 +242,8 @@ export function PastoralLogForm({
           onClick={() => onChange(n as 1 | 2 | 3 | 4 | 5)}
           className={`p-0.5 rounded transition-all hover:scale-110 ${
             n <= value
-              ? 'text-yellow-500'
-              : 'text-gray-300 dark:text-gray-600'
+              ? 'text-warning'
+              : 'text-muted-foreground/30'
           }`}
         >
           <Star
@@ -277,7 +277,7 @@ export function PastoralLogForm({
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
-              <Target className="h-4 w-4 text-blue-500" />
+              <Target className="h-4 w-4 text-primary" />
               활동 연결
             </CardTitle>
           </CardHeader>
@@ -312,10 +312,10 @@ export function PastoralLogForm({
       )}
 
       {/* ── Section 2: 영적 상태 (필수) ── */}
-      <Card className="border-2 border-orange-200">
+      <Card className="border-2 border-warning/20">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
-            <Heart className="h-4 w-4 text-orange-500" />
+            <Heart className="h-4 w-4 text-warning" />
             영적 상태
             <span className="text-xs font-normal text-muted-foreground">
               (필수)
@@ -455,7 +455,7 @@ export function PastoralLogForm({
                 className="flex items-center justify-between w-full text-left"
               >
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Star className="h-4 w-4 text-yellow-500" />
+                  <Star className="h-4 w-4 text-warning" />
                   활동 평가
                   <span className="text-xs font-normal text-muted-foreground">
                     (선택)
@@ -482,8 +482,8 @@ export function PastoralLogForm({
                       onClick={() => setRating(n as 1 | 2 | 3 | 4 | 5)}
                       className={`p-1 rounded-md transition-all hover:scale-110 ${
                         n <= rating
-                          ? 'text-yellow-500'
-                          : 'text-gray-300 dark:text-gray-600'
+                          ? 'text-warning'
+                          : 'text-muted-foreground/30'
                       }`}
                     >
                       <Star
@@ -518,7 +518,7 @@ export function PastoralLogForm({
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-base">
-              <Sparkles className="h-4 w-4 text-purple-500" />
+              <Sparkles className="h-4 w-4 text-accent" />
               영적 돌파
               <span className="text-xs font-normal text-muted-foreground">
                 (선택)
@@ -634,7 +634,7 @@ export function PastoralLogForm({
                 className="flex items-center justify-between w-full text-left"
               >
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <ArrowRight className="h-4 w-4 text-green-500" />
+                  <ArrowRight className="h-4 w-4 text-growth" />
                   다음 단계
                   <span className="text-xs font-normal text-muted-foreground">
                     (선택)

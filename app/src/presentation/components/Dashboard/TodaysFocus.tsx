@@ -48,7 +48,7 @@ export function TodaysFocus({ onNavigateToSoul }: TodaysFocusProps) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Calendar className="h-5 w-5 text-blue-600" />
+          <Calendar className="h-5 w-5 text-primary" />
           오늘의 집중
         </CardTitle>
       </CardHeader>
@@ -59,8 +59,8 @@ export function TodaysFocus({ onNavigateToSoul }: TodaysFocusProps) {
           {urgentItems.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className="h-4 w-4 text-red-500" />
-                <h3 className="text-sm font-semibold text-red-700">긴급 알림</h3>
+                <AlertTriangle className="h-4 w-4 text-danger" />
+                <h3 className="text-sm font-semibold text-danger">긴급 알림</h3>
                 <Badge variant="destructive" className="ml-auto">
                   {crisisAlerts.length}
                 </Badge>
@@ -71,19 +71,19 @@ export function TodaysFocus({ onNavigateToSoul }: TodaysFocusProps) {
                 return (
                   <div
                     key={alert.id}
-                    className="p-3 rounded-lg border-2 border-red-200 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer"
+                    className="p-3 rounded-lg border-2 border-danger/20 bg-danger-light hover:bg-danger/20 transition-colors cursor-pointer"
                     onClick={() => handleSoulClick(alert.soulId)}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-red-900">
+                        <p className="text-sm font-medium text-danger">
                           {soul?.name || '알 수 없음'}
                         </p>
-                        <p className="text-xs text-red-700 mt-1">
+                        <p className="text-xs text-danger mt-1">
                           {alert.title}
                         </p>
                       </div>
-                      <ArrowRight className="h-4 w-4 text-red-500 flex-shrink-0" />
+                      <ArrowRight className="h-4 w-4 text-danger flex-shrink-0" />
                     </div>
                   </div>
                 );
@@ -94,7 +94,7 @@ export function TodaysFocus({ onNavigateToSoul }: TodaysFocusProps) {
           {/* Scheduled Meetings Section */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="h-4 w-4 text-blue-600" />
+              <Clock className="h-4 w-4 text-primary" />
               <h3 className="text-sm font-semibold">오늘 일정</h3>
             </div>
 

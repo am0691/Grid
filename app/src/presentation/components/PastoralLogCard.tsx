@@ -38,8 +38,8 @@ function StarRating({ level, max = 5 }: { level: number; max?: number }) {
           className={cn(
             'w-3 h-3',
             i < level
-              ? 'fill-amber-400 text-amber-400'
-              : 'fill-none text-gray-300'
+              ? 'fill-warning text-warning'
+              : 'fill-none text-muted-foreground/30'
           )}
         />
       ))}

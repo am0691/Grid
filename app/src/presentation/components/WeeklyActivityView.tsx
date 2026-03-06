@@ -99,12 +99,12 @@ export function WeeklyActivityView({
                 <User className="w-3 h-3" />
                 개인 {totalActivities}
               </Badge>
-              <Badge variant="outline" className="gap-1 text-purple-600">
+              <Badge variant="outline" className="gap-1 text-accent">
                 <Sparkles className="w-3 h-3" />
                 추천 {totalRecommendations}
               </Badge>
               {totalActivities > 0 && (
-                <Badge variant="outline" className="gap-1 text-green-600">
+                <Badge variant="outline" className="gap-1 text-growth">
                   완료 {completedActivities}/{totalActivities}
                 </Badge>
               )}
@@ -162,7 +162,7 @@ export function WeeklyActivityView({
                       {group.recommendations.length > 0 && (
                         <div className="space-y-3 pl-6">
                           <div className="flex items-center gap-2">
-                            <Sparkles className="w-3 h-3 text-purple-500" />
+                            <Sparkles className="w-3 h-3 text-accent" />
                             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                               추천 활동
                             </span>
@@ -210,7 +210,7 @@ export function WeeklyActivityView({
                       {group.plans.length > 0 && (
                         <div className="space-y-3 pl-6">
                           <div className="flex items-center gap-2">
-                            <User className="w-3 h-3 text-blue-500" />
+                            <User className="w-3 h-3 text-primary" />
                             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                               개인 활동
                             </span>

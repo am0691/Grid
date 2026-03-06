@@ -153,11 +153,11 @@ export function ActivityPlanPanel({
                   <Circle className="w-3 h-3 fill-current" />
                   전체 {stats.total}
                 </Badge>
-                <Badge variant="outline" className="gap-1 text-green-600">
+                <Badge variant="outline" className="gap-1 text-growth">
                   <CheckCircle className="w-3 h-3" />
                   완료 {stats.completed}
                 </Badge>
-                <Badge variant="outline" className="gap-1 text-purple-600">
+                <Badge variant="outline" className="gap-1 text-accent">
                   <Sparkles className="w-3 h-3" />
                   추천 {stats.recommended}
                 </Badge>
@@ -274,7 +274,7 @@ export function ActivityPlanPanel({
               {showRecommended && contextRecommendations.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-purple-600" />
+                    <Sparkles className="w-4 h-4 text-accent" />
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                       추천 활동
                     </h3>
@@ -345,7 +345,7 @@ export function ActivityPlanPanel({
               {showPersonal && filteredPlans.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-blue-600" />
+                    <User className="w-4 h-4 text-primary" />
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                       개인 활동 ({filteredPlans.length})
                     </h3>

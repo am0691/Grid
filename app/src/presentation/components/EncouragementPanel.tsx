@@ -82,14 +82,14 @@ export function EncouragementPanel({ trainerId }: EncouragementPanelProps) {
   }, []);
 
   return (
-    <Card className="border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-background">
+    <Card className="border-2 border-accent/20 bg-gradient-to-br from-accent/5 to-background">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <Heart className="h-5 w-5 text-pink-500" />
+            <Heart className="h-5 w-5 text-accent" />
             격려 메시지
             {unreadCount > 0 && (
-              <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-pink-500 px-1.5 text-xs font-medium text-white">
+              <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-medium text-white">
                 {unreadCount}
               </span>
             )}
@@ -117,7 +117,7 @@ export function EncouragementPanel({ trainerId }: EncouragementPanelProps) {
                   className={`rounded-lg border p-3 transition-colors ${
                     enc.isRead
                       ? 'bg-muted/30 border-border'
-                      : 'bg-background border-pink-200'
+                      : 'bg-background border-accent/20'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -136,7 +136,7 @@ export function EncouragementPanel({ trainerId }: EncouragementPanelProps) {
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-6 w-6 p-0 shrink-0 text-pink-400 hover:text-pink-600"
+                        className="h-6 w-6 p-0 shrink-0 text-accent/70 hover:text-accent"
                         onClick={() => handleMarkRead(enc.id)}
                       >
                         <CheckCircle className="h-4 w-4" />

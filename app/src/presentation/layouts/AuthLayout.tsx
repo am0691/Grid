@@ -1,6 +1,7 @@
 /**
  * AuthLayout
  * 인증 페이지용 레이아웃 컴포넌트
+ * Deep indigo-to-violet gradient + glassmorphism card
  */
 
 import type { ReactNode } from 'react';
@@ -14,22 +15,31 @@ interface AuthLayoutProps {
 
 export const AuthLayout = ({ children, title, description }: AuthLayoutProps) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-950 dark:via-blue-950 dark:to-indigo-950 p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center auth-bg p-4 relative overflow-hidden">
+      {/* Background decorative orbs */}
+      <div className="absolute top-1/4 -left-32 w-64 h-64 rounded-full bg-primary/10 blur-3xl" />
+      <div className="absolute bottom-1/4 -right-32 w-80 h-80 rounded-full bg-accent/10 blur-3xl" />
+
+      <div className="w-full max-w-md relative z-10 animate-fade-in-up">
+        {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-black tracking-tighter bg-gradient-to-br from-slate-900 via-blue-800 to-indigo-900 dark:from-slate-100 dark:via-blue-200 dark:to-indigo-100 bg-clip-text text-transparent mb-2">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-glow-indigo mb-4">
+            <span className="text-2xl font-extrabold text-white">G</span>
+          </div>
+          <h1 className="text-4xl font-extrabold tracking-tighter text-white mb-1">
             GRID
           </h1>
-          <p className="text-sm text-muted-foreground font-medium">
+          <p className="text-sm text-white/50 font-medium">
             영적 성장 추적 시스템
           </p>
         </div>
 
-        <Card className="border-2 backdrop-blur-sm bg-white/90 dark:bg-slate-900/90">
+        {/* Card with glassmorphism */}
+        <Card className="border border-white/10 backdrop-blur-xl bg-white/[0.07] shadow-modal">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold tracking-tight">{title}</CardTitle>
+            <CardTitle className="text-2xl font-bold tracking-tight text-white">{title}</CardTitle>
             {description && (
-              <CardDescription className="text-base">{description}</CardDescription>
+              <CardDescription className="text-base text-white/50">{description}</CardDescription>
             )}
           </CardHeader>
           <CardContent>{children}</CardContent>

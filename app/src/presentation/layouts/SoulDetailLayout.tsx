@@ -99,8 +99,8 @@ export function SoulDetailLayout() {
 
   const trainingTypeLabel = soul.trainingType === 'convert' ? '전도' : '제자';
   const trainingTypeBadgeColor = soul.trainingType === 'convert'
-    ? 'bg-green-100 text-green-700 border-green-300 dark:bg-green-950 dark:text-green-400'
-    : 'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-950 dark:text-blue-400';
+    ? 'bg-growth-light text-growth border-growth/30'
+    : 'bg-primary/10 text-primary border-primary/30';
 
   return (
     <SoulDetailContext.Provider value={{ soul, soulId }}>

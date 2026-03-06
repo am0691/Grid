@@ -14,10 +14,10 @@ export function SoulTimelinePage() {
   return (
     <div className="space-y-6">
       {/* 페이지 설명 */}
-      <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-background">
+      <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-background">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <History className="w-5 h-5 text-blue-500" />
+            <History className="w-5 h-5 text-primary" />
             활동 타임라인
           </CardTitle>
         </CardHeader>

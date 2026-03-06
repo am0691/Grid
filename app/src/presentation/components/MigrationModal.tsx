@@ -74,13 +74,13 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
         {step === 'info' && (
           <>
             <h2 className="text-2xl font-bold mb-4">데이터 마이그레이션</h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-muted-foreground mb-4">
               localStorage에 저장된 기존 데이터를 Supabase 클라우드로 마이그레이션합니다.
             </p>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded p-4 mb-4">
-              <h3 className="font-semibold text-yellow-800 mb-2">주의사항</h3>
-              <ul className="text-sm text-yellow-700 space-y-1">
+            <div className="bg-warning-light border border-warning/20 rounded p-4 mb-4">
+              <h3 className="font-semibold text-warning mb-2">주의사항</h3>
+              <ul className="text-sm text-warning space-y-1">
                 <li>• 마이그레이션 전에 데이터를 백업하는 것을 권장합니다</li>
                 <li>• 인터넷 연결이 필요합니다</li>
                 <li>• 마이그레이션 중에는 창을 닫지 마세요</li>
@@ -90,7 +90,7 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
             <div className="flex gap-2 mb-4">
               <button
                 onClick={handleBackup}
-                className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+                className="flex-1 px-4 py-2 bg-muted text-muted-foreground rounded hover:bg-muted/80 transition"
               >
                 백업 다운로드
               </button>
@@ -99,13 +99,13 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
             <div className="flex gap-2">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+                className="flex-1 px-4 py-2 bg-secondary text-secondary-foreground rounded hover:bg-secondary/80 transition"
               >
                 취소
               </button>
               <button
                 onClick={handleMigrate}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
               >
                 마이그레이션 시작
               </button>
@@ -118,8 +118,8 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
           <>
             <h2 className="text-2xl font-bold mb-4">마이그레이션 중...</h2>
             <div className="flex flex-col items-center py-8">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mb-4"></div>
-              <p className="text-gray-600">데이터를 마이그레이션하고 있습니다. 잠시만 기다려주세요...</p>
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
+              <p className="text-muted-foreground">데이터를 마이그레이션하고 있습니다. 잠시만 기다려주세요...</p>
             </div>
           </>
         )}
@@ -130,7 +130,7 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
             <div className="text-center">
               <div className="mb-4">
                 <svg
-                  className="mx-auto h-16 w-16 text-green-600"
+                  className="mx-auto h-16 w-16 text-growth"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -143,20 +143,20 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-green-600">마이그레이션 완료!</h2>
-              <p className="text-gray-600 mb-4">{message}</p>
+              <h2 className="text-2xl font-bold mb-2 text-growth">마이그레이션 완료!</h2>
+              <p className="text-muted-foreground mb-4">{message}</p>
 
               {details && (
-                <div className="bg-green-50 border border-green-200 rounded p-4 mb-4">
-                  <p className="text-sm text-green-700">
+                <div className="bg-growth-light border border-growth/20 rounded p-4 mb-4">
+                  <p className="text-sm text-growth">
                     영혼: {details.soulsCount}명<br />
                     진도 데이터: {details.progressCount}개
                   </p>
                 </div>
               )}
 
-              <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-4">
-                <p className="text-sm text-blue-700">
+              <div className="bg-primary/5 border border-primary/20 rounded p-4 mb-4">
+                <p className="text-sm text-primary">
                   마이그레이션이 완료되었습니다. 이제 localStorage 데이터를 삭제할 수 있습니다.
                 </p>
               </div>
@@ -165,13 +165,13 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
             <div className="flex gap-2">
               <button
                 onClick={handleClearLocalStorage}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded hover:bg-destructive/90 transition"
               >
                 localStorage 초기화
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
               >
                 완료
               </button>
@@ -185,7 +185,7 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
             <div className="text-center">
               <div className="mb-4">
                 <svg
-                  className="mx-auto h-16 w-16 text-red-600"
+                  className="mx-auto h-16 w-16 text-danger"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -198,11 +198,11 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-red-600">마이그레이션 실패</h2>
-              <p className="text-gray-600 mb-4">{message}</p>
+              <h2 className="text-2xl font-bold mb-2 text-danger">마이그레이션 실패</h2>
+              <p className="text-muted-foreground mb-4">{message}</p>
 
-              <div className="bg-red-50 border border-red-200 rounded p-4 mb-4">
-                <p className="text-sm text-red-700">
+              <div className="bg-danger-light border border-danger/20 rounded p-4 mb-4">
+                <p className="text-sm text-danger">
                   문제가 발생했습니다. 인터넷 연결을 확인하고 다시 시도해주세요.
                 </p>
               </div>
@@ -211,13 +211,13 @@ export const MigrationModal: React.FC<MigrationModalProps> = ({
             <div className="flex gap-2">
               <button
                 onClick={() => setStep('info')}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+                className="flex-1 px-4 py-2 bg-secondary text-secondary-foreground rounded hover:bg-secondary/80 transition"
               >
                 다시 시도
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded hover:bg-destructive/90 transition"
               >
                 닫기
               </button>

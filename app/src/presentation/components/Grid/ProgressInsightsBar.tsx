@@ -116,7 +116,7 @@ export function ProgressInsightsBar({ soul, progress }: ProgressInsightsBarProps
             <div className="flex items-center gap-2">
               <span className="text-2xl font-bold">{overallProgress}%</span>
               {isAhead ? (
-                <Badge variant="default" className="bg-green-500">
+                <Badge variant="default" className="bg-growth">
                   <TrendingUp className="w-3 h-3 mr-1" />
                   앞서감
                 </Badge>
@@ -138,7 +138,7 @@ export function ProgressInsightsBar({ soul, progress }: ProgressInsightsBarProps
             <Progress value={overallProgress} className="h-3" />
             {/* Expected progress marker */}
             <div
-              className="absolute top-0 h-3 w-0.5 bg-gray-400"
+              className="absolute top-0 h-3 w-0.5 bg-muted-foreground"
               style={{ left: `${expectedProgress}%` }}
               title={`예상 진도: ${expectedProgress}%`}
             />
@@ -194,7 +194,7 @@ export function ProgressInsightsBar({ soul, progress }: ProgressInsightsBarProps
         {/* Delayed areas warning */}
         {delayedAreas.length > 0 && (
           <div className="pt-2 border-t">
-            <div className="flex items-center gap-2 mb-2 text-amber-600">
+            <div className="flex items-center gap-2 mb-2 text-warning">
               <AlertTriangle className="w-4 h-4" />
               <span className="text-sm font-medium">지연된 영역</span>
             </div>
@@ -202,12 +202,12 @@ export function ProgressInsightsBar({ soul, progress }: ProgressInsightsBarProps
               {delayedAreas.slice(0, 3).map((area) => (
                 <div
                   key={area.areaId}
-                  className="flex items-center justify-between text-sm p-2 rounded-md bg-amber-50 dark:bg-amber-950/30"
+                  className="flex items-center justify-between text-sm p-2 rounded-md bg-warning-light dark:bg-warning/10"
                 >
                   <span style={{ color: area.color }} className="font-medium">
                     {area.areaName}
                   </span>
-                  <span className="text-amber-700 dark:text-amber-400">
+                  <span className="text-warning">
                     {area.delayWeeks}{weekLabel} 지연
                   </span>
                 </div>

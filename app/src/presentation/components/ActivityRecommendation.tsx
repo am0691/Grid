@@ -71,14 +71,14 @@ export function ActivityRecommendationCard({
       <CardContent className="space-y-6">
         {/* 성경 구절 */}
         {recommendation.bibleVerse && (
-          <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div className="bg-primary/5 dark:bg-primary/10 p-4 rounded-lg border border-primary/20 dark:border-primary/20">
             <div className="flex items-start gap-3">
-              <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+              <BookOpen className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium text-blue-900 dark:text-blue-100 mb-1">
+                <p className="font-medium text-foreground mb-1">
                   {recommendation.bibleVerse.reference}
                 </p>
-                <p className="text-sm text-blue-800 dark:text-blue-200 italic">
+                <p className="text-sm text-foreground/80 italic">
                   "{recommendation.bibleVerse.text}"
                 </p>
               </div>
@@ -90,16 +90,16 @@ export function ActivityRecommendationCard({
         {recommendation.goals && recommendation.goals.length > 0 && (
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Target className="w-4 h-4 text-green-600" />
-              <h4 className="font-semibold text-sm text-gray-700 dark:text-gray-300">
+              <Target className="w-4 h-4 text-growth" />
+              <h4 className="font-semibold text-sm text-foreground">
                 이번 주 목표
               </h4>
             </div>
             <ul className="space-y-2">
               {recommendation.goals.map((goal, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700 dark:text-gray-300">{goal}</span>
+                  <CheckCircle2 className="w-4 h-4 text-growth mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground">{goal}</span>
                 </li>
               ))}
             </ul>
@@ -109,16 +109,16 @@ export function ActivityRecommendationCard({
         {/* 활동 목록 */}
         {recommendation.activities && recommendation.activities.length > 0 && (
           <div>
-            <h4 className="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3">
+            <h4 className="font-semibold text-sm text-foreground mb-3">
               추천 활동
             </h4>
             <ul className="space-y-2">
               {recommendation.activities.map((activity, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
-                  <div className="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs font-medium">
+                  <div className="w-5 h-5 rounded-full bg-violet-light dark:bg-accent/20 text-accent flex items-center justify-center flex-shrink-0 mt-0.5 text-xs font-medium">
                     {index + 1}
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300">{activity}</span>
+                  <span className="text-foreground">{activity}</span>
                 </li>
               ))}
             </ul>
@@ -127,16 +127,16 @@ export function ActivityRecommendationCard({
 
         {/* 팁 */}
         {recommendation.tips && recommendation.tips.length > 0 && (
-          <div className="bg-yellow-50 dark:bg-yellow-950 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+          <div className="bg-warning-light dark:bg-warning/10 p-4 rounded-lg border border-warning/20 dark:border-warning/20">
             <div className="flex items-start gap-3">
-              <Lightbulb className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+              <Lightbulb className="w-5 h-5 text-warning mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="font-semibold text-sm text-yellow-900 dark:text-yellow-100 mb-2">
+                <h4 className="font-semibold text-sm text-foreground mb-2">
                   양육자 팁
                 </h4>
                 <ul className="space-y-1.5">
                   {recommendation.tips.map((tip, index) => (
-                    <li key={index} className="text-sm text-yellow-800 dark:text-yellow-200">
+                    <li key={index} className="text-sm text-foreground/80">
                       • {tip}
                     </li>
                   ))}
@@ -178,7 +178,7 @@ export function ActivityRecommendationList({
 }: ActivityRecommendationListProps) {
   if (recommendations.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+      <div className="text-center py-12 text-muted-foreground">
         {emptyMessage}
       </div>
     );

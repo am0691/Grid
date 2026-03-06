@@ -163,7 +163,7 @@ export const SignupPage = () => {
             <Label htmlFor="name">
               이름
               {formData.name && !errors.name && (
-                <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-growth" />
               )}
             </Label>
             <Input
@@ -188,7 +188,7 @@ export const SignupPage = () => {
             <Label htmlFor="email">
               이메일
               {formData.email && !errors.email && (
-                <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-growth" />
               )}
             </Label>
             <Input
@@ -213,7 +213,7 @@ export const SignupPage = () => {
             <Label htmlFor="password">
               비밀번호
               {formData.password && !errors.password && (
-                <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-growth" />
               )}
             </Label>
             <Input
@@ -245,7 +245,7 @@ export const SignupPage = () => {
               {formData.confirmPassword &&
                 formData.password === formData.confirmPassword &&
                 !errors.confirmPassword && (
-                  <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                  <CheckCircle2 className="inline-block ml-1 h-3.5 w-3.5 text-growth" />
                 )}
             </Label>
             <Input

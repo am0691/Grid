@@ -1,67 +1,85 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    /* GRID Design System — Light Mode */
+    --background: 220 14% 98%;
+    --foreground: 231 35% 18%;
+    --card: 30 20% 99.5%;
+    --card-foreground: 231 35% 18%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --popover-foreground: 231 35% 18%;
+    --primary: 231 66% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 231 35% 18%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 46%;
+    --accent: 263 70% 50%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.625rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 220 13% 90%;
+    --input: 220 13% 90%;
+    --ring: 231 66% 55%;
+    --radius: 0.75rem;
+
+    /* Semantic */
+    --growth: 152 60% 42%;
+    --warning: 38 92% 55%;
+    --danger: 0 84% 60%;
+
+    /* Sidebar — always dark */
+    --sidebar-background: 231 45% 15%;
+    --sidebar-foreground: 220 14% 85%;
+    --sidebar-primary: 231 66% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 231 30% 22%;
+    --sidebar-accent-foreground: 220 14% 90%;
+    --sidebar-border: 231 20% 22%;
+    --sidebar-ring: 231 66% 60%;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    /* GRID Design System — Dark Mode (Linear-style) */
+    --background: 230 21% 11%;
+    --foreground: 220 14% 96%;
+    --card: 230 21% 14%;
+    --card-foreground: 220 14% 96%;
+    --popover: 230 21% 14%;
+    --popover-foreground: 220 14% 96%;
+    --primary: 231 66% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 15% 18%;
+    --secondary-foreground: 220 14% 96%;
+    --muted: 230 15% 18%;
+    --muted-foreground: 220 10% 60%;
+    --accent: 263 70% 60%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --border: 230 15% 22%;
+    --input: 230 15% 22%;
+    --ring: 231 66% 60%;
+
+    /* Semantic */
+    --growth: 152 55% 48%;
+    --warning: 38 88% 58%;
+    --danger: 0 72% 55%;
+
+    /* Sidebar — stays dark */
+    --sidebar-background: 231 45% 10%;
+    --sidebar-foreground: 220 14% 85%;
+    --sidebar-primary: 231 66% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 231 30% 18%;
+    --sidebar-accent-foreground: 220 14% 90%;
+    --sidebar-border: 231 20% 18%;
+    --sidebar-ring: 231 66% 65%;
   }
 }
 
@@ -69,7 +87,28 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-feature-settings: 'ss01' 1, 'cv01' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Smooth transitions for theme changes */
+  *,
+  *::before,
+  *::after {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, box-shadow;
+    transition-timing-function: ease;
+    transition-duration: 0ms;
+  }
+
+  /* Only animate specific interactive elements */
+  button, a, input, select, textarea,
+  [role="button"], [data-slot="card"],
+  [data-slot="badge"], [data-slot="button"] {
+    transition-duration: 150ms;
   }
 }

@@ -1,6 +1,6 @@
 /**
  * Mobile Navigation Component
- * Fixed bottom navigation bar for mobile devices
+ * Dark bottom navigation bar with dot indicator
  */
 
 import { NavLink } from 'react-router-dom';
@@ -39,10 +39,12 @@ export function MobileNav({ className }: MobileNavProps) {
     <nav
       className={cn(
         'fixed bottom-0 left-0 right-0 z-50',
-        'bg-background border-t border-border',
-        'md:hidden', // Only visible on mobile
+        'bg-sidebar border-t border-white/[0.06]',
+        'md:hidden',
+        'safe-area-pb',
         className
       )}
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <div className="flex items-center justify-around h-16 px-2">
         {navItems.map((item) => {
@@ -51,19 +53,30 @@ export function MobileNav({ className }: MobileNavProps) {
             <NavLink
               key={item.to}
               to={item.to}
+              end={item.to === '/'}
               className={({ isActive }) =>
                 cn(
                   'flex flex-col items-center justify-center gap-1',
-                  'min-w-0 flex-1 py-2 px-1 rounded-lg transition-colors',
-                  'hover:bg-accent',
+                  'min-w-0 flex-1 py-2 px-1 rounded-lg transition-all press-feedback',
                   isActive
-                    ? 'text-primary'
-                    : 'text-muted-foreground'
+                    ? 'text-white'
+                    : 'text-sidebar-foreground/50'
                 )
               }
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-xs font-medium truncate">{item.label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon className={cn(
+                    'w-5 h-5 transition-colors',
+                    isActive ? 'text-primary' : ''
+                  )} />
+                  <span className="text-[10px] font-medium truncate">{item.label}</span>
+                  {/* Active dot indicator */}
+                  {isActive && (
+                    <div className="absolute bottom-1.5 w-1 h-1 rounded-full bg-primary" />
+                  )}
+                </>
+              )}
             </NavLink>
           );
         })}

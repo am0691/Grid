@@ -20,10 +20,10 @@ import type { Notification, NotificationType } from '@/store/notificationStore';
 
 // Icon mapping for notification types
 const notificationIcons: Record<NotificationType, { icon: typeof Bell; color: string }> = {
-  crisis_alert: { icon: AlertTriangle, color: 'text-red-500' },
-  reminder: { icon: BellRing, color: 'text-blue-500' },
-  milestone: { icon: Star, color: 'text-green-500' },
-  system: { icon: Info, color: 'text-gray-500' },
+  crisis_alert: { icon: AlertTriangle, color: 'text-danger' },
+  reminder: { icon: BellRing, color: 'text-primary' },
+  milestone: { icon: Star, color: 'text-growth' },
+  system: { icon: Info, color: 'text-muted-foreground' },
 };
 
 // Type labels for grouping
@@ -54,7 +54,7 @@ function NotificationItem({ notification, onMarkAsRead, onNavigate }: Notificati
     <div
       className={cn(
         'flex gap-3 p-3 rounded-md hover:bg-accent cursor-pointer transition-colors group',
-        !notification.isRead && 'bg-blue-50 dark:bg-blue-950/20'
+        !notification.isRead && 'bg-primary/5 dark:bg-primary/10'
       )}
       onClick={handleClick}
     >
@@ -71,7 +71,7 @@ function NotificationItem({ notification, onMarkAsRead, onNavigate }: Notificati
             {notification.title}
           </p>
           {!notification.isRead && (
-            <div className="h-2 w-2 rounded-full bg-blue-500 shrink-0 mt-1.5" />
+            <div className="h-2 w-2 rounded-full bg-primary shrink-0 mt-1.5" />
           )}
         </div>
 

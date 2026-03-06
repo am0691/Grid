@@ -82,8 +82,8 @@ export function ActivityPlanCard({
     }
 
     return {
-      backgroundColor: isCompleted ? '#f9fafb' : 'white',
-      borderColor: isCompleted ? '#e5e7eb' : areaMeta?.color || '#e5e7eb',
+      backgroundColor: isCompleted ? 'hsl(var(--muted))' : 'hsl(var(--card))',
+      borderColor: isCompleted ? 'hsl(var(--border))' : areaMeta?.color || 'hsl(var(--border))',
       borderWidth: '2px',
       borderStyle: 'solid',
     };
@@ -320,7 +320,7 @@ export function ActivityPlanCard({
 
           {/* Completion info */}
           {isCompleted && plan.completedAt && (
-            <div className="flex items-center gap-2 text-sm text-green-600">
+            <div className="flex items-center gap-2 text-sm text-growth">
               <CheckCircle2 className="w-4 h-4" />
               <span>
                 완료: {new Date(plan.completedAt).toLocaleDateString('ko-KR')}

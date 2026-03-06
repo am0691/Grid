@@ -1,10 +1,6 @@
 /**
  * CellDialog - Cell Detail Dialog Component
  * Shows activities for a specific area/week cell
- * - View/add/edit/delete activities
- * - Mark cell as complete
- * - Add memos
- * - Activity recommendations
  */
 
 import { useState, useMemo, useEffect } from 'react';
@@ -31,13 +27,11 @@ interface CellData {
 
 // Area-specific activity templates
 const AREA_RECOMMENDATIONS: Record<string, string[]> = {
-  // Convert areas
   salvation: ['복음 핵심 나누기', '구원의 확신 점검', '간증 나누기', '복음 요약 연습'],
   word: ['성경 함께 읽기', '말씀 암송하기', '큐티 나눔', '성경 적용점 나누기'],
   fellowship: ['식사 교제', '안부 전화하기', '커피 타임', '삶 나눔 시간'],
   sin: ['회개 기도 함께하기', '변화된 삶 나누기', '성령 충만 기도', '거룩한 삶 점검'],
   notes: ['특별 기도제목 나누기', '감사 나눔', '격려 메시지'],
-  // Disciple areas
   memorization: ['암송 구절 점검', '새 구절 함께 외우기', '암송 복습'],
   bibleStudy: ['성경공부 진도 체크', '교리 질문 답변', '성경 배경 설명'],
   devotion: ['경건의 시간 나눔', '묵상 나눔', '주야 묵상 점검'],
@@ -83,14 +77,12 @@ export function CellDialog({
   const [quickRating, setQuickRating] = useState<1 | 2 | 3 | 4 | 5>(3);
   const [quickNote, setQuickNote] = useState('');
 
-  // Sync memo text when cell data changes
   useEffect(() => {
     setMemoText(cellData?.memo || '');
   }, [cellData?.memo]);
 
   const weekLabel = trainingType === 'convert' ? '주차' : '월차';
 
-  // Generate recommendations based on past activities and area templates
   const recommendations = useMemo(() => {
     if (!cellData) return [];
 
@@ -98,7 +90,6 @@ export function CellDialog({
     const areaId = cellData.areaId;
     const currentWeek = cellData.week;
 
-    // 1. Follow-up activities from last week (same area)
     const lastWeekActivities = allActivities.filter(
       (p) => p.areaId === areaId && p.week === currentWeek - 1 && p.status === 'completed'
     );
@@ -106,7 +97,6 @@ export function CellDialog({
       result.push(`${activity.title} (후속)`);
     });
 
-    // 2. Pattern-based recommendations from this week's other areas
     const thisWeekOtherAreas = allActivities.filter(
       (p) => p.week === currentWeek && p.areaId !== areaId && p.status === 'completed'
     );
@@ -120,7 +110,6 @@ export function CellDialog({
       }
     }
 
-    // 3. Default area templates
     const areaTemplates = AREA_RECOMMENDATIONS[areaId] || [];
     const existingTitles = activities.map((a) => a.title.toLowerCase());
 
@@ -159,14 +148,12 @@ export function CellDialog({
     const activity = activities.find(a => a.id === activityId);
     if (!activity) return;
 
-    // If completing an activity (not yet completed), show quick evaluation
     if (activity.status !== 'completed') {
       setQuickEvalActivity(activityId);
       setQuickRating(3);
       setQuickNote('');
       onToggleActivityComplete(activityId);
     } else {
-      // If uncompleting, just toggle
       onToggleActivityComplete(activityId);
     }
   };
@@ -194,25 +181,33 @@ export function CellDialog({
   return (
     <Dialog open={!!cellData} onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
+        {/* Area color accent top border */}
+        <div
+          className="absolute top-0 left-0 right-0 h-1 rounded-t-xl"
+          style={{ background: `linear-gradient(90deg, ${areaMeta.color}, ${areaMeta.color}80)` }}
+        />
+
         <DialogHeader>
-          <DialogTitle>
-            <span style={{ color: areaMeta.color }}>
-              {areaMeta.name} - {cellData.week}{weekLabel}
-            </span>
+          <DialogTitle className="flex items-center gap-2">
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: areaMeta.color }}
+            />
+            <span>{areaMeta.name} - {cellData.week}{weekLabel}</span>
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5">
           {/* Status display */}
-          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border/30">
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center"
+              className="w-10 h-10 rounded-full flex items-center justify-center transition-all"
               style={{
                 backgroundColor: cellData.status === 'completed'
                   ? areaMeta.lightBgColor
                   : cellData.status === 'current'
                     ? areaMeta.color
-                    : '#f3f4f6'
+                    : 'hsl(var(--secondary))'
               }}
             >
               {cellData.status === 'completed' && (
@@ -222,17 +217,17 @@ export function CellDialog({
                 <Star className="w-5 h-5 text-white" />
               )}
               {cellData.status === 'future' && (
-                <span className="text-gray-400">-</span>
+                <span className="text-muted-foreground">-</span>
               )}
             </div>
             <div className="flex-1">
-              <p className="font-medium">
+              <p className="font-medium text-sm">
                 {cellData.status === 'completed' && '완료됨'}
                 {cellData.status === 'current' && '현재 진도'}
                 {cellData.status === 'future' && '미래'}
               </p>
               {cellData.completedAt && (
-                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   완료일: {cellData.completedAt}
                 </p>
@@ -242,6 +237,7 @@ export function CellDialog({
               variant={cellData.status === 'completed' ? 'outline' : 'default'}
               size="sm"
               onClick={onToggleComplete}
+              className="press-feedback"
               style={cellData.status !== 'completed' ? {
                 backgroundColor: areaMeta.color,
                 borderColor: areaMeta.color
@@ -253,16 +249,15 @@ export function CellDialog({
 
           {/* Activity plans section */}
           <div className="space-y-3">
-            <h4 className="font-medium flex items-center gap-2">
+            <h4 className="font-medium text-sm flex items-center gap-2">
               활동 계획
               {activities.length > 0 && (
-                <Badge variant="secondary">
+                <Badge variant="secondary" className="text-[11px]">
                   {activities.length}개
                 </Badge>
               )}
             </h4>
 
-            {/* Activity list */}
             {activities.length > 0 ? (
               <ScrollArea className="max-h-[180px]">
                 <div className="space-y-2">
@@ -273,10 +268,10 @@ export function CellDialog({
                     return (
                       <div key={activity.id}>
                         <div
-                          className={`flex items-center gap-3 p-2 rounded-lg border transition-colors ${
+                          className={`flex items-center gap-3 p-2.5 rounded-lg border transition-all ${
                             activity.status === 'completed'
-                              ? 'bg-green-50 border-green-200'
-                              : 'bg-white hover:bg-gray-50'
+                              ? 'bg-growth-light border-growth/20'
+                              : 'bg-card hover:bg-secondary/50 border-border/30'
                           }`}
                         >
                           <Checkbox
@@ -289,23 +284,22 @@ export function CellDialog({
                             {activity.title}
                           </span>
 
-                          {/* Visual indicators */}
                           {isEvaluated && (
-                            <div className="flex items-center gap-1 text-yellow-500">
-                              <Star className="w-4 h-4 fill-yellow-500" />
+                            <div className="flex items-center gap-1 text-warning">
+                              <Star className="w-4 h-4 fill-warning" />
                               <span className="text-xs font-medium">{activity.evaluation?.rating}</span>
                             </div>
                           )}
                           {needsEvaluation && (
                             <div title="평가 필요">
-                              <AlertCircle className="w-4 h-4 text-orange-500" />
+                              <AlertCircle className="w-4 h-4 text-warning" />
                             </div>
                           )}
 
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 w-7 p-0 text-muted-foreground hover:text-red-500"
+                            className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
                             onClick={() => onDeleteActivity(activity.id)}
                           >
                             <Trash2 className="w-4 h-4" />
@@ -314,18 +308,17 @@ export function CellDialog({
 
                         {/* Quick evaluation prompt */}
                         {quickEvalActivity === activity.id && (
-                          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
-                            <p className="text-sm font-medium text-blue-900">활동을 평가해주세요</p>
+                          <div className="mt-2 p-3 bg-primary/5 border border-primary/20 rounded-lg space-y-3">
+                            <p className="text-sm font-medium">활동을 평가해주세요</p>
 
-                            {/* Quick rating */}
                             <div className="flex items-center gap-1">
                               {[1, 2, 3, 4, 5].map((value) => (
                                 <button
                                   key={value}
                                   type="button"
                                   onClick={() => setQuickRating(value as 1 | 2 | 3 | 4 | 5)}
-                                  className={`p-1 rounded transition-all ${
-                                    value <= quickRating ? 'text-yellow-500' : 'text-gray-300'
+                                  className={`p-1 rounded transition-all hover:scale-110 ${
+                                    value <= quickRating ? 'text-warning' : 'text-border'
                                   }`}
                                 >
                                   <Star
@@ -336,7 +329,6 @@ export function CellDialog({
                               ))}
                             </div>
 
-                            {/* Quick note */}
                             <Input
                               placeholder="간단한 메모 (선택사항)"
                               value={quickNote}
@@ -344,7 +336,6 @@ export function CellDialog({
                               className="text-sm"
                             />
 
-                            {/* Action buttons */}
                             <div className="flex gap-2">
                               <Button
                                 variant="outline"
@@ -357,7 +348,7 @@ export function CellDialog({
                               <Button
                                 size="sm"
                                 onClick={() => handleQuickEvaluate(activity.id)}
-                                className="flex-1 text-xs"
+                                className="flex-1 text-xs press-feedback"
                                 style={{
                                   backgroundColor: areaMeta.color,
                                   borderColor: areaMeta.color
@@ -374,7 +365,7 @@ export function CellDialog({
                 </div>
               </ScrollArea>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-3 bg-muted/50 rounded-lg">
+              <p className="text-sm text-muted-foreground text-center py-3 bg-secondary/30 rounded-lg border border-border/30">
                 아직 계획이 없습니다
               </p>
             )}
@@ -391,6 +382,7 @@ export function CellDialog({
               <Button
                 onClick={handleAddPlan}
                 disabled={!newPlanTitle.trim()}
+                className="press-feedback"
                 style={{
                   backgroundColor: areaMeta.color,
                   borderColor: areaMeta.color
@@ -404,7 +396,7 @@ export function CellDialog({
           {/* Recommendations section */}
           {recommendations.length > 0 && (
             <div className="space-y-3">
-              <h4 className="font-medium flex items-center gap-2 text-purple-600">
+              <h4 className="font-medium text-sm flex items-center gap-2 text-accent">
                 <Sparkles className="w-4 h-4" />
                 추천 활동
               </h4>
@@ -414,7 +406,7 @@ export function CellDialog({
                     key={index}
                     variant="outline"
                     size="sm"
-                    className="text-xs h-8 border-dashed border-purple-300 text-purple-600 hover:bg-purple-50 hover:border-purple-400"
+                    className="text-xs h-8 border-dashed border-accent/30 text-accent hover:bg-accent/5 hover:border-accent/50 press-feedback"
                     onClick={() => handleAddRecommendation(rec)}
                   >
                     <Plus className="w-3 h-3 mr-1" />
@@ -427,7 +419,7 @@ export function CellDialog({
 
           {/* Memo section */}
           <div className="space-y-2">
-            <h4 className="font-medium">메모</h4>
+            <h4 className="font-medium text-sm">메모</h4>
             <Textarea
               value={memoText}
               onChange={(e) => setMemoText(e.target.value)}
@@ -438,14 +430,13 @@ export function CellDialog({
               variant="outline"
               size="sm"
               onClick={handleSaveMemo}
-              className="w-full"
+              className="w-full press-feedback"
             >
               메모 저장
             </Button>
           </div>
         </div>
       </DialogContent>
-
     </Dialog>
   );
 }

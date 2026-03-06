@@ -34,8 +34,8 @@ export function QuickActionsButton({
         onAddSoul?.();
         setOpen(false);
       },
-      color: 'text-blue-600',
-      bgColor: 'hover:bg-blue-50',
+      color: 'text-primary',
+      bgColor: 'hover:bg-primary/5',
     },
     {
       label: '미팅 기록',
@@ -44,8 +44,8 @@ export function QuickActionsButton({
         onLogMeeting?.();
         setOpen(false);
       },
-      color: 'text-green-600',
-      bgColor: 'hover:bg-green-50',
+      color: 'text-growth',
+      bgColor: 'hover:bg-growth-light',
     },
     {
       label: '돌파 기록',
@@ -54,8 +54,8 @@ export function QuickActionsButton({
         onRecordBreakthrough?.();
         setOpen(false);
       },
-      color: 'text-amber-600',
-      bgColor: 'hover:bg-amber-50',
+      color: 'text-warning',
+      bgColor: 'hover:bg-warning-light',
     },
   ];
 

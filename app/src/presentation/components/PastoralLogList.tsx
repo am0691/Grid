@@ -109,7 +109,7 @@ export function PastoralLogList({ soulId, onCreateNew, onEdit }: PastoralLogList
           >
             {showFilters ? '필터 닫기' : '필터'}
             {hasActiveFilters && (
-              <span className="ml-1 w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
+              <span className="ml-1 w-1.5 h-1.5 rounded-full bg-primary inline-block" />
             )}
           </Button>
           <Button onClick={onCreateNew} size="sm">

@@ -158,15 +158,15 @@ export const InsightsPage = () => {
   }, [filteredLogs]);
 
   const trendIcon = (trend: SoulInsightSummary['overallTrend']) => {
-    if (trend === 'improving') return <TrendingUp className="h-4 w-4 text-green-500" />;
-    if (trend === 'declining') return <TrendingDown className="h-4 w-4 text-red-500" />;
-    return <Minus className="h-4 w-4 text-yellow-500" />;
+    if (trend === 'improving') return <TrendingUp className="h-4 w-4 text-growth" />;
+    if (trend === 'declining') return <TrendingDown className="h-4 w-4 text-danger" />;
+    return <Minus className="h-4 w-4 text-warning" />;
   };
 
   const trendColor = (trend: SoulInsightSummary['overallTrend']) => {
-    if (trend === 'improving') return 'text-green-600';
-    if (trend === 'declining') return 'text-red-600';
-    return 'text-yellow-600';
+    if (trend === 'improving') return 'text-growth';
+    if (trend === 'declining') return 'text-danger';
+    return 'text-warning';
   };
 
   return (
@@ -206,8 +206,8 @@ export const InsightsPage = () => {
                 <p className="text-sm text-muted-foreground">총 활동</p>
                 <p className="text-2xl font-bold">{totalActivities > 0 ? totalActivities : '-'}</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Activity className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Activity className="h-6 w-6 text-primary" />
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
@@ -225,8 +225,8 @@ export const InsightsPage = () => {
                   {averageRating != null ? averageRating.toFixed(1) : '-'}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
-                <Target className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 rounded-lg bg-growth-light flex items-center justify-center">
+                <Target className="h-6 w-6 text-growth" />
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
@@ -242,8 +242,8 @@ export const InsightsPage = () => {
                 <p className="text-sm text-muted-foreground">돌파 횟수</p>
                 <p className="text-2xl font-bold">{breakthroughCount > 0 ? breakthroughCount : '-'}</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-purple-600" />
+              <div className="w-12 h-12 rounded-lg bg-violet-light flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-accent" />
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
@@ -259,8 +259,8 @@ export const InsightsPage = () => {
                 <p className="text-sm text-muted-foreground">관심 필요</p>
                 <p className="text-2xl font-bold">{attentionCount > 0 ? attentionCount : '-'}</p>
               </div>
-              <div className="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center">
-                <AlertCircle className="h-6 w-6 text-orange-600" />
+              <div className="w-12 h-12 rounded-lg bg-warning-light flex items-center justify-center">
+                <AlertCircle className="h-6 w-6 text-warning" />
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
@@ -339,7 +339,7 @@ export const InsightsPage = () => {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">영적 돌파</span>
-                <span className="font-medium text-purple-600">{weeklySummary.breakthroughs}회</span>
+                <span className="font-medium text-accent">{weeklySummary.breakthroughs}회</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">평균 무드</span>
@@ -377,9 +377,9 @@ export const InsightsPage = () => {
                   .map(insight => (
                     <div
                       key={insight.soulId}
-                      className="flex items-start gap-3 p-3 border rounded-lg bg-orange-50 border-orange-200"
+                      className="flex items-start gap-3 p-3 border rounded-lg bg-warning-light border-warning/20"
                     >
-                      <AlertCircle className="h-4 w-4 text-orange-500 mt-0.5 shrink-0" />
+                      <AlertCircle className="h-4 w-4 text-warning mt-0.5 shrink-0" />
                       <div>
                         <p className="font-medium text-sm">{insight.soulName}</p>
                         <p className="text-xs text-muted-foreground">{insight.attentionReason}</p>
@@ -429,7 +429,7 @@ export const InsightsPage = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground">돌파</p>
-                      <p className="font-medium text-purple-600">{insight.breakthroughCount}</p>
+                      <p className="font-medium text-accent">{insight.breakthroughCount}</p>
                     </div>
                     <div className={`flex items-center gap-1 ${trendColor(insight.overallTrend)}`}>
                       {trendIcon(insight.overallTrend)}

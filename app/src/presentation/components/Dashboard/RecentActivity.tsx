@@ -56,7 +56,7 @@ export function RecentActivity({ limit = 10, onNavigateToSoul }: RecentActivityP
         description: log.observations?.slice(0, 50) || undefined,
         timestamp: log.recordedAt,
         icon: BookOpen,
-        iconColor: log.mood === 'growing' ? 'text-green-600' : log.mood === 'stable' ? 'text-yellow-600' : 'text-red-600',
+        iconColor: log.mood === 'growing' ? 'text-growth' : log.mood === 'stable' ? 'text-warning' : 'text-danger',
       });
 
       // Add breakthrough entries separately if present
@@ -70,7 +70,7 @@ export function RecentActivity({ limit = 10, onNavigateToSoul }: RecentActivityP
           description: log.breakthroughCategory || undefined,
           timestamp: log.recordedAt,
           icon: Sparkles,
-          iconColor: 'text-yellow-600',
+          iconColor: 'text-warning',
         });
       }
     }
@@ -103,7 +103,7 @@ export function RecentActivity({ limit = 10, onNavigateToSoul }: RecentActivityP
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Activity className="h-5 w-5 text-green-600" />
+          <Activity className="h-5 w-5 text-growth" />
           최근 활동
         </CardTitle>
       </CardHeader>

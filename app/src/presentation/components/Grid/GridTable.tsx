@@ -57,18 +57,31 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
     );
   };
 
-  const getActivityBadgeColor = (activities: ActivityPlan[]) => {
-    if (activities.length === 0) return { bg: 'bg-gray-200', text: 'text-gray-600' };
+  const getActivityBadgeStyle = (activities: ActivityPlan[]) => {
+    if (activities.length === 0) return 'bg-muted text-muted-foreground';
 
     const completedCount = activities.filter(a => a.status === 'completed').length;
     const totalCount = activities.length;
 
     if (completedCount === totalCount) {
-      return { bg: 'bg-green-500', text: 'text-white' };
+      return 'bg-growth text-white';
     } else if (completedCount > 0) {
-      return { bg: 'bg-amber-500', text: 'text-white' };
+      return 'bg-warning text-white';
     } else {
-      return { bg: 'bg-gray-300', text: 'text-gray-700' };
+      return 'bg-muted-foreground/20 text-muted-foreground';
+    }
+  };
+
+  const getCellClasses = (status: 'completed' | 'current' | 'future', color: string) => {
+    const base = 'w-full min-h-[90px] max-h-[120px] rounded-lg border-2 flex flex-col items-start justify-start p-2 transition-all hover:scale-[1.02] relative text-left';
+
+    switch (status) {
+      case 'completed':
+        return `${base}`;
+      case 'current':
+        return `${base} animate-pulse-glow`;
+      default:
+        return `${base} cell-future-pattern`;
     }
   };
 
@@ -77,7 +90,7 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
       case 'completed':
         return {
           backgroundColor: lightBgColor,
-          borderColor: color,
+          borderColor: `${color}40`,
           color: color
         };
       case 'current':
@@ -85,32 +98,32 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
           backgroundColor: color,
           borderColor: color,
           color: 'white',
-          boxShadow: `0 0 0 2px ${color}, 0 0 0 4px white, 0 0 0 6px ${color}`
+          boxShadow: `0 0 0 2px ${color}30`
         };
       default:
         return {
-          backgroundColor: '#f3f4f6',
-          borderColor: '#e5e7eb',
-          color: '#9ca3af'
+          backgroundColor: 'hsl(var(--secondary))',
+          borderColor: 'hsl(var(--border))',
+          color: 'hsl(var(--muted-foreground))'
         };
     }
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-xl border border-border/50 bg-card shadow-card">
       <table className="w-full border-collapse">
         <thead>
-          <tr>
-            <th className="p-3 text-left font-medium text-muted-foreground border-b-2">
+          <tr className="bg-secondary/50">
+            <th className="p-3 text-left font-medium text-muted-foreground text-sm border-b border-border/50 sticky left-0 bg-secondary/50 z-10">
               {weekLabel}
             </th>
             {areas.map(area => (
               <th
                 key={area.id}
                 className="p-3 text-center font-medium border-b-2 min-w-[120px]"
-                style={{ borderColor: area.color, color: area.color }}
+                style={{ borderBottomColor: area.color, color: area.color }}
               >
-                <div className="text-sm">{area.name}</div>
+                <div className="text-sm font-semibold">{area.name}</div>
               </th>
             ))}
           </tr>
@@ -119,8 +132,8 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
           {Array.from({ length: maxWeek }, (_, weekIndex) => {
             const week = weekIndex + 1;
             return (
-              <tr key={week} className="border-b hover:bg-muted/50">
-                <td className="p-3 font-medium text-muted-foreground">
+              <tr key={week} className="border-b border-border/30 hover:bg-secondary/30 transition-colors">
+                <td className="p-3 font-medium text-muted-foreground text-sm sticky left-0 bg-card z-10">
                   {week}{weekLabel}
                 </td>
                 {areas.map(area => {
@@ -128,7 +141,7 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
                   const style = getCellStyle(cellData.status, area.color, area.lightBgColor);
                   const hasMemo = !!cellData.memo;
                   const cellActivities = getCellActivities(area.id, week);
-                  const badgeColor = getActivityBadgeColor(cellActivities);
+                  const badgeStyle = getActivityBadgeStyle(cellActivities);
 
                   return (
                     <td key={area.id} className="p-1">
@@ -137,7 +150,7 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
                           <TooltipTrigger asChild>
                             <button
                               onClick={() => onCellClick(area.id, week)}
-                              className="w-full min-h-[90px] max-h-[120px] rounded-md border-2 flex flex-col items-start justify-start p-2 transition-all hover:scale-[1.02] relative text-left"
+                              className={getCellClasses(cellData.status, area.color)}
                               style={style}
                             >
                               {/* Top: Status icon */}
@@ -154,16 +167,15 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
                                   {hasMemo && (
                                     <MessageSquare className="w-3 h-3 opacity-70" />
                                   )}
-                                  {/* Activity count badge */}
                                   {cellActivities.length > 0 && (
-                                    <span className={`${badgeColor.bg} ${badgeColor.text} text-xs px-1.5 py-0.5 rounded-full font-medium`}>
+                                    <span className={`${badgeStyle} text-[10px] px-1.5 py-0.5 rounded-full font-semibold`}>
                                       {cellActivities.length}
                                     </span>
                                   )}
                                 </div>
                               </div>
 
-                              {/* Activity list (max 3 with checkbox icons) */}
+                              {/* Activity list */}
                               {cellActivities.length > 0 ? (
                                 <div className="w-full space-y-0.5 text-sm">
                                   {cellActivities.slice(0, 3).map((activity) => (
@@ -190,8 +202,8 @@ export function GridTable({ soul, progress, activityPlans, onCellClick }: GridTa
                                   )}
                                 </div>
                               ) : (
-                                <div className="text-sm opacity-50 italic">
-                                  클릭하여 추가
+                                <div className="text-[11px] opacity-40">
+                                  {cellData.status === 'future' ? '' : '클릭하여 추가'}
                                 </div>
                               )}
                             </button>
@@ -238,19 +250,19 @@ export function GridLegend() {
   return (
     <div className="flex gap-6 text-sm">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded bg-green-100 border border-green-600 flex items-center justify-center">
-          <Check className="w-4 h-4 text-green-600" />
+        <div className="w-6 h-6 rounded-md bg-growth-light border border-growth/40 flex items-center justify-center">
+          <Check className="w-4 h-4 text-growth" />
         </div>
         <span>완료</span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded bg-green-600 flex items-center justify-center shadow-[0_0_0_2px_white,0_0_0_4px_green]">
+        <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center shadow-glow-indigo">
           <Star className="w-4 h-4 text-white" />
         </div>
         <span>현재 진도</span>
       </div>
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded bg-gray-100 border border-gray-200" />
+        <div className="w-6 h-6 rounded-md bg-secondary border border-border cell-future-pattern" />
         <span>미래</span>
       </div>
     </div>

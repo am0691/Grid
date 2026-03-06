@@ -81,16 +81,16 @@ export function SoulsListPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">영혼 목록</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl font-bold tracking-tight">영혼 목록</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             양육 중인 모든 영혼을 확인하고 관리하세요
           </p>
         </div>
-        <Button onClick={() => setIsAddDialogOpen(true)} size="lg">
+        <Button onClick={() => setIsAddDialogOpen(true)} className="press-feedback">
           <Plus className="w-4 h-4 mr-2" />
           새 영혼
         </Button>
@@ -113,7 +113,7 @@ export function SoulsListPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               Convert
-              <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-growth-light text-growth">
                 13주
               </span>
             </CardTitle>
@@ -127,7 +127,7 @@ export function SoulsListPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               Disciple
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-violet-light text-accent">
                 12개월
               </span>
             </CardTitle>
